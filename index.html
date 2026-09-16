@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint Health — MAPD Script</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg-card: #111827;
+  --bg-card-hover: #1a2236;
+  --bg-sidebar: #0d1220;
+  --accent: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.25);
+  --accent-soft: rgba(59, 130, 246, 0.1);
+  --green: #10b981;
+  --green-soft: rgba(16, 185, 129, 0.12);
+  --yellow: #f59e0b;
+  --yellow-soft: rgba(245, 158, 11, 0.12);
+  --red: #ef4444;
+  --red-soft: rgba(239, 68, 68, 0.12);
+  --orange: #f97316;
+  --orange-soft: rgba(249, 115, 22, 0.12);
+  --purple: #a78bfa;
+  --purple-soft: rgba(167, 139, 250, 0.12);
+  --gold: #eab308;
+  --gold-soft: rgba(234, 179, 8, 0.12);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --border: rgba(255,255,255,0.06);
+  --border-accent: rgba(59,130,246,0.3);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+
+/* ─── SIDEBAR ─── */
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--accent), #60a5fa);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.logo-text {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.new-call-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+.new-call-btn:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-glow); }
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--red-soft);
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 12px;
+}
+.live-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.sidebar-section {
+  padding: 12px 12px 4px;
+}
+.sidebar-section-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 13px;
+  color: var(--text-dim);
+  border: 1px solid transparent;
+}
+.sidebar-item:hover { background: var(--bg-card); color: var(--text); }
+.sidebar-item.active { background: var(--accent-soft); color: var(--accent); border-color: var(--border-accent); }
+
+.sidebar-item .step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+.sidebar-item.active .step-num { background: var(--accent); color: white; }
+.sidebar-item.completed .step-num { background: var(--green); color: white; }
+
+.sidebar-item .step-icon {
+  font-size: 16px;
+  width: 24px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Quick Jump */
+.quick-jump {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.quick-jump-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+  padding: 0 8px;
+  margin-bottom: 6px;
+}
+.quick-link {
+  display: block;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.quick-link:hover { background: var(--bg-card); color: var(--accent); }
+
+/* ─── MAIN CONTENT ─── */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 48px 80px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+/* Step header */
+.step-header {
+  margin-bottom: 28px;
+}
+.step-counter {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  font-family: 'JetBrains Mono', monospace;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.step-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.step-subtitle {
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 600px;
+}
+
+/* Agent script bubble */
+.agent-line {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  animation: fadeSlideIn 0.3s ease;
+}
+@keyframes fadeSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.agent-label {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 4px 8px;
+  border-radius: 6px;
+  height: fit-content;
+  margin-top: 4px;
+}
+
+.agent-bubble {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text);
+  flex: 1;
+  position: relative;
+}
+.agent-bubble strong { color: var(--accent); font-weight: 600; }
+
+/* Tip / Note cards */
+.tip-card, .note-card, .warning-card, .success-card, .target-card, .disclosure-card {
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 1.6;
+  border-left: 3px solid;
+}
+.tip-card { background: var(--yellow-soft); border-color: var(--yellow); color: var(--yellow); }
+.tip-card strong { color: var(--yellow); }
+.note-card { background: var(--accent-soft); border-color: var(--accent); color: #93c5fd; }
+.note-card strong { color: #93c5fd; }
+.warning-card { background: var(--orange-soft); border-color: var(--orange); color: var(--orange); }
+.warning-card strong { color: var(--orange); }
+.success-card { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+.success-card strong { color: var(--green); }
+.target-card { background: var(--purple-soft); border-color: var(--purple); color: var(--purple); }
+.target-card strong { color: var(--purple); }
+
+.card-icon { margin-right: 6px; }
+
+/* Required verbatim disclosure card */
+.disclosure-card {
+  background: var(--gold-soft);
+  border: 1px solid rgba(234,179,8,0.35);
+  border-left: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 0;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.disclosure-card-header {
+  background: rgba(234,179,8,0.16);
+  padding: 8px 18px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.disclosure-card-body {
+  padding: 16px 18px 18px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text);
+}
+.agent-line .disclosure-card {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* Verbal confirmation toggle */
+.confirm-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 16px;
+}
+.confirm-toggle {
+  display: flex;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.confirm-toggle input[type="radio"] { display: none; }
+.confirm-toggle label {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--bg);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-right: 1px solid var(--border);
+}
+.confirm-toggle label:last-of-type { border-right: none; }
+.confirm-toggle input[value="yes"]:checked + label { background: var(--green); color: #fff; }
+.confirm-toggle input[value="no"]:checked + label { background: var(--red); color: #fff; }
+
+/* Objection / Rebuttal toggles */
+.objections-section {
+  margin: 24px 0;
+}
+.objections-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--orange);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.objection {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.objection:hover { border-color: var(--border-accent); }
+
+.objection-trigger {
+  padding: 12px 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-dim);
+  transition: color 0.15s;
+  user-select: none;
+}
+.objection-trigger:hover { color: var(--text); }
+.objection-trigger .arrow { font-size: 12px; color: var(--text-muted); transition: transform 0.2s; }
+.objection.open .objection-trigger .arrow { transform: rotate(180deg); }
+
+.objection-body {
+  display: none;
+  padding: 0 16px 16px;
+}
+.objection.open .objection-body { display: block; }
+
+/* Buttons / Navigation */
+.step-nav {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.nav-btn {
+  padding: 12px 24px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-btn:hover { border-color: var(--border-accent); background: var(--bg-card-hover); }
+.nav-btn.primary { background: var(--accent); border-color: var(--accent); color: white; }
+.nav-btn.primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 12px var(--accent-glow); }
+
+/* Route / coverage selector cards */
+.route-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.route-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.route-card:hover { border-color: var(--border-accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+.route-card.selected { border-color: var(--accent); box-shadow: 0 0 24px var(--accent-glow); }
+.route-card .route-icon { font-size: 28px; margin-bottom: 8px; }
+.route-card .route-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.route-card .route-desc { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+
+/* Form elements */
+select, input[type="number"], input[type="date"], input[type="text"], input[type="tel"] {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 14px;
+  width: 100%;
+  max-width: 360px;
+  outline: none;
+  transition: border-color 0.2s;
+  color-scheme: dark;
+}
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+select:focus, input:focus { border-color: var(--accent); }
+select option { background: var(--bg-card); }
+
+.form-group { margin-bottom: 16px; }
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+@media (max-width: 700px) { .form-row { grid-template-columns: 1fr; } }
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+/* Calc-style radio group (shared) */
+.calc-radio-group {
+  display: flex;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-top: 1px;
+}
+.calc-radio-group input[type="radio"] { display: none; }
+.calc-radio-group label {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--bg);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  border-right: 1px solid var(--border);
+}
+.calc-radio-group label:last-of-type { border-right: none; }
+.calc-radio-group input[type="radio"]:checked + label {
+  background: var(--accent);
+  color: #FFFFFF;
+}
+
+/* Checkbox list rows (SEP indicators, health flags, checklist) */
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+.check-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--accent); flex-shrink: 0; }
+.check-row span { font-size: 14px; color: var(--text); }
+.check-row.sep-row { border-color: rgba(167,139,250,0.25); }
+.check-row.sep-row input[type="checkbox"] { accent-color: var(--purple); }
+.check-row.disqualify-row { border-color: rgba(239,68,68,0.2); }
+.check-row.disqualify-row input[type="checkbox"] { accent-color: var(--red); }
+
+/* State / SEP indicator badges */
+.state-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 4px 4px 4px 0;
+}
+.state-badge.green { background: var(--green-soft); color: var(--green); }
+.state-badge.red { background: var(--red-soft); color: var(--red); }
+.state-badge.orange { background: var(--orange-soft); color: var(--orange); }
+.state-badge.purple { background: var(--purple-soft); color: var(--purple); }
+
+/* Hidden sections */
+.step-section { display: none; }
+.step-section.active { display: block; }
+
+/* Dynamic list rows (doctors / prescriptions) */
+.list-row {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.list-row-remove {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--red-soft);
+  color: var(--red);
+  border: none;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+.list-row-remove:hover { background: var(--red); color: #fff; }
+.add-row-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px dashed var(--border-accent);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-bottom: 16px;
+}
+.add-row-btn:hover { background: var(--accent); color: #fff; border-style: solid; }
+
+/* Checklist progress */
+.checklist-progress {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+}
+.checklist-progress-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  overflow: hidden;
+  margin-top: 8px;
+}
+.checklist-progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.25s ease;
+  width: 0%;
+}
+
+/* Rebuttals reference section */
+.rebuttal-category {
+  margin-bottom: 24px;
+}
+.rebuttal-category-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Call complete banner */
+.call-complete {
+  background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(59,130,246,0.1));
+  border: 1px solid var(--green);
+  border-radius: var(--radius);
+  padding: 32px;
+  text-align: center;
+  margin: 24px 0;
+}
+.call-complete .check { font-size: 48px; margin-bottom: 12px; }
+.call-complete h3 { font-size: 20px; color: var(--green); }
+
+/* Section separator */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 32px 0;
+}
+
+/* Benefit / review blocks */
+.benefit-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.benefit-block .benefit-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { padding: 20px 16px 80px; }
+  .route-selector { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+}
+
+/* Mobile nav toggle */
+.mobile-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-sidebar);
+  border-top: 1px solid var(--border);
+  padding: 8px 16px;
+  z-index: 200;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .mobile-nav { display: flex; }
+}
+.mobile-nav button {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.mobile-nav button.active { background: var(--accent); color: white; border-color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <div class="logo-icon">BH</div>
+      <div class="logo-text">Blueprint Health<br>MAPD Script</div>
+    </div>
+    <button class="new-call-btn" onclick="resetCall()">↺ New Call</button>
+    <div class="live-badge">LIVE MODE</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">CALL STEPS</div>
+    <div class="sidebar-item active" data-step="1" onclick="goToStep(1)"><span class="step-num">1</span> Icebreaker</div>
+    <div class="sidebar-item" data-step="2" onclick="goToStep(2)"><span class="step-num">2</span> Eligibility &amp; Coverage</div>
+    <div class="sidebar-item" data-step="3" onclick="goToStep(3)"><span class="step-num">3</span> Scope &amp; FMO</div>
+    <div class="sidebar-item" data-step="4" onclick="goToStep(4)"><span class="step-num">4</span> Verify in System</div>
+    <div class="sidebar-item" data-step="5" onclick="goToStep(5)"><span class="step-num">5</span> Current Coverage</div>
+    <div class="sidebar-item" data-step="6" onclick="goToStep(6)"><span class="step-num">6</span> SEP Indicators</div>
+    <div class="sidebar-item" data-step="7" onclick="goToStep(7)"><span class="step-num">7</span> Doctors &amp; Rx</div>
+    <div class="sidebar-item" data-step="8" onclick="goToStep(8)"><span class="step-num">8</span> Plan Review</div>
+    <div class="sidebar-item" data-step="9" onclick="goToStep(9)"><span class="step-num">9</span> Closing</div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-title">REFERENCE</div>
+    <div class="sidebar-item" onclick="goToStep('disclosures')"><span class="step-icon">📜</span> Required Disclosures</div>
+    <div class="sidebar-item" onclick="goToStep('rebuttals')"><span class="step-icon">⚡</span> Rebuttals</div>
+  </div>
+
+  <div class="quick-jump">
+    <div class="quick-jump-title">QUICK JUMP</div>
+    <a class="quick-link" onclick="goToStep(5)">📋 Current Coverage (Step 5)</a>
+    <a class="quick-link" onclick="goToStep(6)">🏷️ SEP Indicators (Step 6)</a>
+    <a class="quick-link" onclick="goToStep('disclosures')">📜 Required Disclosures</a>
+    <a class="quick-link" onclick="goToStep('rebuttals')">⚡ Rebuttals</a>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main" id="main">
+
+<!-- ═══════════════ STEP 1 ═══════════════ -->
+<section class="step-section active" id="step-1">
+  <div class="step-header">
+    <div class="step-counter">Step 1 of 9</div>
+    <h1 class="step-title">Icebreaker &amp; Introduction</h1>
+    <p class="step-subtitle">Confirm who you're speaking with, disclose the recorded line, and get their ZIP and Date of Birth to pull them up in Sunfire.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Hello my name is [First and Last Name] and I am a licensed agent with Blueprint Health. Who do I have the pleasure of speaking with?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Good morning/afternoon Mr./Ms. [Last Name], how are you doing today?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I'm glad to hear that.</div></div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">And [Name], I just want to let you know that all of my calls are recorded for quality and training purposes, and if we get disconnected can I call you back at this number, it looks like it is (###-###-####).</div>
+    </div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, and once again my name is [First Name] and my role here today is to review the Medicare options available to you in your area and to see whether you may qualify for additional benefits and coverage that align with your needs. To start off can I please get your Zip code and date of birth?</div></div>
+
+  <div class="note-card"><span class="card-icon">📋</span> <strong>[Enter ZIP code in Sunfire]</strong> — pull their report while you continue the conversation.</div>
+
+  <div class="tip-card"><span class="card-icon">💡</span> Keep the tone warm and unrushed — this is the client's first impression of the call.</div>
+
+  <div class="objections-section">
+    <div class="objections-header">⚡ Objections</div>
+
+    <div class="objection">
+      <div class="objection-trigger" onclick="toggleObjection(this)">"How did you get my number?" <span class="arrow">▼</span></div>
+      <div class="objection-body">
+        <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Great question — you actually requested information on Medicare benefits available in your area, which is how we connected today. I just have a couple of quick questions and then I can let you know exactly what's available to you.</div></div>
+      </div>
+    </div>
+
+    <div class="objection">
+      <div class="objection-trigger" onclick="toggleObjection(this)">"I'm happy with my current plan." <span class="arrow">▼</span></div>
+      <div class="objection-body">
+        <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great to hear — I'm not here to switch anything on you. My job today is just to review what's available in your area and make sure you're not missing out on anything. If your current plan really is the best fit, we'll confirm that together.</div></div>
+      </div>
+    </div>
+
+    <div class="objection">
+      <div class="objection-trigger" onclick="toggleObjection(this)">"I'm not interested." <span class="arrow">▼</span></div>
+      <div class="objection-body">
+        <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I completely understand — I'll keep this brief. I just need your ZIP code and date of birth so I can check what's available in your area. If nothing makes sense for you, I'll let you go right away.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn primary" onclick="goToStep(2)">Next →</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 2 ═══════════════ -->
+<section class="step-section" id="step-2">
+  <div class="step-header">
+    <div class="step-counter">Step 2 of 9</div>
+    <h1 class="step-title">Eligibility, Decision-Maker &amp; Other Coverage</h1>
+    <p class="step-subtitle">Confirm Medicare Parts A &amp; B, confirm who makes healthcare decisions, then screen for other health coverage.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And just to confirm, are you currently enrolled in Medicare Parts A &amp; B?</div></div>
+
+  <div style="display:flex;justify-content:center;margin:16px 0">
+    <div class="calc-radio-group" style="max-width:500px;width:100%">
+      <input type="radio" id="partsAbYes" name="partsAbCheck" value="yes" onchange="togglePartsAb()">
+      <label for="partsAbYes">Yes — Enrolled A &amp; B</label>
+      <input type="radio" id="partsAbNo" name="partsAbCheck" value="no" onchange="togglePartsAb()">
+      <label for="partsAbNo">No</label>
+    </div>
+  </div>
+
+  <div id="partsAbNoContent" style="display:none">
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>End Call:</strong> "Unfortunately I am only able to assist individuals with Medicare Parts A and B. I hope you have a great day."</div>
+  </div>
+
+  <div id="partsAbYesContent" style="display:none">
+    <div class="success-card"><span class="card-icon">✅</span> Eligible to continue — proceed to decision-maker check.</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And &lt;Client Name&gt;, do you make your own health care decisions?</div></div>
+
+  <div style="display:flex;justify-content:center;margin:16px 0">
+    <div class="calc-radio-group" style="max-width:500px;width:100%">
+      <input type="radio" id="decisionYes" name="decisionCheck" value="yes" onchange="toggleDecisionMaker()">
+      <label for="decisionYes">Yes</label>
+      <input type="radio" id="decisionNo" name="decisionCheck" value="no" onchange="toggleDecisionMaker()">
+      <label for="decisionNo">No</label>
+    </div>
+  </div>
+
+  <div id="decisionYesContent" style="display:none">
+    <div class="note-card"><span class="card-icon">💡</span> <strong>If client says yes but someone helps them:</strong> "If I am able to find you the benefits you called in about today, does that person need to be present or can you make your own decision?"</div>
+  </div>
+
+  <div id="decisionNoContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Is that individual available to join today's call?</div></div>
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>If not available — End Call.</strong> We are not able to continue without the decision-maker present.</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok, and in addition to Medicare, do you have any other health coverage currently, such as VA Benefits, Tricare for Life, ChampVA, PACE, or Employer or Retirement Benefits that provide healthcare coverage?</div></div>
+
+  <div class="form-group">
+    <label class="form-label">Other Coverage Type</label>
+    <select id="otherCoverageSelect" onchange="handleOtherCoverage()">
+      <option value="">— Select response —</option>
+      <option value="none">No Additional Health Coverage → Proceed</option>
+      <option value="va">VA Benefits</option>
+      <option value="tricare">Tricare for Life / ChampVA</option>
+      <option value="other">Other (Retirement Benefits, Gov't Employee BCBS, PACE, etc.)</option>
+    </select>
+  </div>
+
+  <div id="coverageNoneContent" style="display:none">
+    <div class="success-card"><span class="card-icon">✅</span> No additional coverage — proceed with the conversation.</div>
+  </div>
+
+  <div id="coverageVaContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you go to the VA for all of your doctors or do you see civilian doctors?</div></div>
+    <div style="display:flex;justify-content:center;margin:12px 0 16px">
+      <div class="calc-radio-group" style="max-width:500px;width:100%">
+        <input type="radio" id="vaDoctorsCivilian" name="vaDoctors" value="civilian" onchange="handleVaDoctors()">
+        <label for="vaDoctorsCivilian">Civilian Doctors</label>
+        <input type="radio" id="vaDoctorsVaOnly" name="vaDoctors" value="vaonly" onchange="handleVaDoctors()">
+        <label for="vaDoctorsVaOnly">Only the VA</label>
+      </div>
+    </div>
+    <div id="vaDoctorsCivilianNote" style="display:none" class="note-card"><span class="card-icon">📋</span> Doctors must be in network — confirm this when reviewing providers in Sunfire.</div>
+    <div id="vaDoctorsVaOnlyNote" style="display:none" class="note-card"><span class="card-icon">📋</span> Confirm this when inputting doctors/specialists — since they only see VA doctors, we can use any carrier and will select a PCP for purposes of the application.</div>
+
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you get all of your prescriptions filled through the VA?</div></div>
+    <div style="display:flex;justify-content:center;margin:12px 0 16px">
+      <div class="calc-radio-group" style="max-width:500px;width:100%">
+        <input type="radio" id="vaRxYes" name="vaRx" value="yes" onchange="handleVaRx()">
+        <label for="vaRxYes">Yes — VA Only</label>
+        <input type="radio" id="vaRxNo" name="vaRx" value="no" onchange="handleVaRx()">
+        <label for="vaRxNo">No — Fills Outside VA</label>
+      </div>
+    </div>
+    <div id="vaRxResult"></div>
+  </div>
+
+  <div id="coverageTricareContent" style="display:none">
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>Tricare / ChampVA — Manager Required.</strong> Loop in a manager before proceeding with this client.</div>
+  </div>
+
+  <div id="coverageOtherContent" style="display:none">
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>End Call.</strong> Retirement benefits, Government Employee BCBS, PACE, and similar other coverage make this client ineligible for this conversation. Thank them for their time and end the call politely.</div>
+  </div>
+
+  <div id="coverageRouteResult" style="margin-top:12px"></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(1)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(3)">Next →</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 4 ═══════════════ -->
+<section class="step-section" id="step-3">
+  <div class="step-header">
+    <div class="step-counter">Step 3 of 9</div>
+    <h1 class="step-title">Scope of Conversation &amp; FMO Disclosure</h1>
+    <p class="step-subtitle">Read the required Medicare disclosures, list what Blueprint Health offers, and get verbal permission to proceed.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, you are eligible to continue with our conversation today. And before we review the options available to you in your area, I do just have to read these brief Medicare disclosures to maintain compliance, and that is first to let you know that:</div></div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">We do not offer every plan available in your area. Currently we represent [#] Organizations which offer [#] Products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program (SHIP) to get information on all of your options.</div>
+    </div>
+  </div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">And lastly, I work for Blueprint Health, a licensed insurance agency. In your area we offer:
+        <ul style="margin:10px 0 0 20px; padding:0; line-height:1.9">
+          <li>Medicare Advantage Plans</li>
+          <li>Medicare Advantage Prescription Drug Plans</li>
+          <li>Dental, Vision, Hearing Plans</li>
+          <li>Hospital Indemnity Plans</li>
+          <li>Short-Term Home Healthcare Plans</li>
+          <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation and discuss these options with you?</div></div>
+  <div class="confirm-wrap">
+    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
+    <div class="confirm-toggle">
+      <input type="radio" id="scopeConfirmYes" name="scopeConfirm" value="yes" onchange="updateConfirmState('scopeConfirmResult', true)">
+      <label for="scopeConfirmYes">✓ Yes</label>
+      <input type="radio" id="scopeConfirmNo" name="scopeConfirm" value="no" onchange="updateConfirmState('scopeConfirmResult', false)" checked>
+      <label for="scopeConfirmNo">Not Yet</label>
+    </div>
+  </div>
+  <div id="scopeConfirmResult"></div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">And I do just want to let you know that this conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.</div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(2)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(4)">Next →</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 4 ═══════════════ -->
+<section class="step-section" id="step-4">
+  <div class="step-header">
+    <div class="step-counter">Step 4 of 9</div>
+    <h1 class="step-title">Verify Client in the Medicare System</h1>
+    <p class="step-subtitle">Get permission to look them up, then verify date of birth and mailing address once their profile loads.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Okay so next we will check your eligibility through your Medicare Parts A and B to see what benefits you qualify for.</div></div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">Do I have your permission to verify your Medicare Eligibility.</div>
+    </div>
+  </div>
+  <div class="confirm-wrap">
+    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
+    <div class="confirm-toggle">
+      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState('lookupConfirmResult', true)">
+      <label for="lookupConfirmYes">✓ Yes</label>
+      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState('lookupConfirmResult', false)" checked>
+      <label for="lookupConfirmNo">Not Yet</label>
+    </div>
+  </div>
+  <div id="lookupConfirmResult"></div>
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect. Could you please grab your Red, White, and Blue Medicare card and read me the numbers and letters across the middle exactly as they appear?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Thank you very much Mr./Ms. [Last Name]. Please allow me a brief moment while I verify your Medicare eligibility and review the options available in your area. <span style="color:var(--text-muted)">[Pause]</span></div></div>
+
+  <div class="tip-card"><span class="card-icon">💡</span> <strong>While the report loads</strong> — build rapport. Ask about their day, how long they've had Medicare, family. "Are you originally from [STATE] or did you move there?" "Are you still working or fully retired?" Keep them talking and comfortable — this also buys time for the report to load.</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect Mr./Ms. [Last Name], I do have your Medicare eligibility verified. For security and accuracy purposes, I'd just like to quickly confirm the information I'm seeing on the account.</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I show your full name as <strong>[Full Name]</strong>, date of birth <strong>[DOB]</strong>, and mailing address as <strong>[Address]</strong>. Is all of that correct?</div></div>
+  <div style="display:flex;justify-content:center;margin:12px 0 16px">
+    <div class="calc-radio-group" style="max-width:500px;width:100%">
+      <input type="radio" id="addressMatchYes" name="addressMatch" value="yes" onchange="toggleMov()" checked>
+      <label for="addressMatchYes">Matches</label>
+      <input type="radio" id="addressMatchNo" name="addressMatch" value="no" onchange="toggleMov()">
+      <label for="addressMatchNo">Different Address</label>
+    </div>
+  </div>
+  <div id="addressMatchesContent"><div class="success-card"><span class="card-icon">✅</span> "Perfect, thank you for confirming."</div></div>
+  <div id="movContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and is that address your new primary residence? We will definitely want to see what opportunities are available for you at your new residence.</div></div>
+    <div class="target-card"><span class="card-icon">🏷️</span> <strong>SEP Indicator — MOV (Moved).</strong> This flags a Special Enrollment Period based on a change of address. Carry this flag into Step 6.</div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(3)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(5)">Next →</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 5 ═══════════════ -->
+<section class="step-section" id="step-5">
+  <div class="step-header">
+    <div class="step-counter">Step 5 of 9</div>
+    <h1 class="step-title">Current Coverage Review &amp; Needs Analysis</h1>
+    <p class="step-subtitle">Confirm what's on file, then dig into their current coverage — including a quick Original Medicare vs. Medicare Advantage explainer if needed.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect and just to confirm</div></div>
+
+  <div class="route-selector">
+    <div class="route-card" onclick="selectPlanStatus('medicare', this)"><div class="route-icon">💳</div><div class="route-name">Medicare Plan Appears</div><div class="route-desc">Current MA plan on file</div></div>
+    <div class="route-card" onclick="selectPlanStatus('pdpnone', this)"><div class="route-icon">📭</div><div class="route-name">PDP / No Plan Appears</div><div class="route-desc">PDP only or nothing on file</div></div>
+  </div>
+
+  <div id="medicarePlanContent" style="display:none">
+    <div class="agent-line">
+      <span class="agent-label">Agent</span>
+      <div class="agent-bubble">
+        I do see that you are enrolled in <strong>[Current Plan]</strong>
+        <ul style="margin:12px 0 0 20px; padding:0; line-height:1.9">
+          <li>You were previously enrolled in <strong>[Previous Plan]</strong></li>
+          <li>And you have Medicaid / Extra Help with Prescriptions (as applicable)
+            <ul style="margin:6px 0 0 20px">
+              <li>🏷️ SEP Indicator – Integrated Plan</li>
+              <li>If Client enrolled in Medicare within the last 6 months — 🏷️ SEP Indicator – New to Medicare</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Does that all sound correct?</div></div>
+  </div>
+
+  <div id="pdpNoPlanContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you currently have any supplemental coverage like a Medigap or Medicare Supplement plan?</div></div>
+    <div class="note-card"><span class="card-icon">📋</span> If client doesn't know: "What card do you hand the doctor when you go?"</div>
+
+    <div class="route-selector">
+      <div class="route-card" onclick="selectCoverageType('medigap', this)"><div class="route-icon">📄</div><div class="route-name">Medicare Supplement Plan</div><div class="route-desc">Has a Medigap plan</div></div>
+      <div class="route-card" onclick="selectCoverageType('original', this)"><div class="route-icon">🏥</div><div class="route-name">Original Medicare</div><div class="route-desc">No supplement plan</div></div>
+    </div>
+
+    <div id="medigapContent" style="display:none">
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok perfect, so that means you are paying an amount each month for that plan and do not typically have copays when you go to the doctor. Does that sound correct?</div></div>
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Let me ask you, how much are you paying for that supplement plan? And about how much are you paying for your Prescription Drug Plan and Dental coverage?</div></div>
+      <div class="note-card"><span class="card-icon">📋</span> [Add up total — okay so you are paying [$amount] per month?]</div>
+    </div>
+
+    <div id="originalContent" style="display:none">
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Has anyone ever explained to you how Original Medicare works?</div></div>
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">So, when you turn 65 or qualify for Medicare for having a disability, you get that Red White and Blue card. The cost of Medicare Part B is generally $202.90/month that is taken out of your social security check.</div></div>
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Original Medicare covers 80% of your costs and leaves you responsible for 20% with no cap — and in addition to that there are deductibles you have to pay before the benefits kick-in. Additionally, it doesn't include Prescription Drug Coverage, dental, vision, or hearing.</div></div>
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That is where Medicare Advantage comes in — it wraps up all of those benefits into one plan, adds in dental, vision, hearing, prescription drug coverage, and often extra benefits like transportation and an over-the-counter allowance, all under one simple plan.</div></div>
+    </div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(4)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(6)">Next →</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 6 ═══════════════ -->
+<section class="step-section" id="step-6">
+  <div class="step-header">
+    <div class="step-counter">Step 6 of 9</div>
+    <h1 class="step-title">Additional Questions &amp; SEP Indicators</h1>
+    <p class="step-subtitle">These help surface every opportunity the client may be eligible for — and flag which Special Enrollment Period applies.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now I'm going to ask you a few questions here to help me better understand all of the opportunities you may be eligible for. You do not have to answer if you are not comfortable, but they do help me understand everything that could be available to you.</div></div>
+
+  <div style="display:flex;flex-direction:column;gap:0" id="sepChecks">
+    <label class="check-row sep-row"><input type="checkbox" id="chkMedicaid" onchange="updateSepFlags()"><span>Are you currently enrolled in Medicaid or receiving any kind of state assistance with Medicare?</span></label>
+    <div id="medicaidNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Review D-SNP Options. SEP Indicator – Integrated Plan / Change in Medicaid Status / LIS</div>
+
+    <label class="check-row"><input type="checkbox" id="chkTransport" onchange="updateSepFlags()"><span>Do you currently use your plan's transportation benefits to get to and from doctor's appointments?</span></label>
+    <div id="transportNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Look for plans with Transportation Benefits.</div>
+
+    <label class="check-row"><input type="checkbox" id="chkSurgery" onchange="updateSepFlags()"><span>Do you have any major upcoming surgeries or procedures that are scheduled?</span></label>
+    <div id="surgeryNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Review related copays and be aware of how changes to their plan may impact an upcoming surgery/procedure.</div>
+
+    <label class="check-row"><input type="checkbox" id="chkDentures" onchange="updateSepFlags()"><span>How are your teeth? Do you need dentures or any dental work?</span></label>
+    <div id="denturesNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Review Dental Benefits</div>
+
+    <label class="check-row sep-row"><input type="checkbox" id="chkChronic" onchange="updateSepFlags()"><span>Medicare recognizes certain chronic conditions as qualifying for additional benefits — things like diabetes, heart disease, COPD, kidney disease and other heart and lung related issues. Have you ever been diagnosed with any of these conditions?</span></label>
+    <div id="chronicNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Review C-SNP Options. SEP Indicator – Chronic Condition</div>
+
+    <label class="check-row"><input type="checkbox" id="chkOtherHealth" onchange="updateSepFlags()"><span>What about any conditions like High Blood Pressure, High Cholesterol, or anything like that?</span></label>
+    <div id="otherHealthNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> SSBCI Indicator – Food Card Qualifier</div>
+
+    <label class="check-row"><input type="checkbox" id="chkCoverageChange" onchange="updateSepFlags()"><span>Have you made any changes to your health coverage this month?</span></label>
+    <div id="coverageChangeNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Ask the client the name of the plan they switched to.</div>
+  </div>
+
+  <div class="tip-card" style="margin-top:16px"><span class="card-icon">💡</span> Take notes and reassure the beneficiary where there could be opportunities — e.g. "I definitely know there are offerings specific for people with diabetes, so we'll make sure we take a look at those today."</div>
+
+  <hr class="section-divider">
+
+  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px">🏷️ SEP Indicator Summary</div>
+  <div id="sepSummary"><span style="font-size:13px;color:var(--text-muted)">No SEP indicators flagged yet — check any that apply above.</span></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(5)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(7)">Next →</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 7 ═══════════════ -->
+<section class="step-section" id="step-7">
+  <div class="step-header">
+    <div class="step-counter">Step 7 of 9</div>
+    <h1 class="step-title">Review Doctors &amp; Prescriptions</h1>
+    <p class="step-subtitle">Confirm doctors and prescriptions are up to date in the system.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Great — and just to make sure your profile is up-to-date in the system, I want to confirm a few details:</div></div>
+
+  <hr class="section-divider">
+
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:12px">🩺 DOCTORS</div>
+
+  <div class="route-selector">
+    <div class="route-card" onclick="selectDoctorsStatus('listed', this)"><div class="route-icon">📋</div><div class="route-name">Doctors Listed</div><div class="route-desc">Already on file</div></div>
+    <div class="route-card" onclick="selectDoctorsStatus('notlisted', this)"><div class="route-icon">➕</div><div class="route-name">Doctors Not Listed</div><div class="route-desc">Nothing on file</div></div>
+  </div>
+
+  <div id="doctorsListedContent" style="display:none">
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px">Confirm information is up to date</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Is &lt;Doctor Name&gt; still your Primary Care doctor?</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And are you still seeing these doctors? <span style="color:var(--text-muted)">[review all doctors listed]</span></div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Are there any other doctors or specialists that you are seeing?</div></div>
+    <div class="note-card"><span class="card-icon">📋</span> Add any new doctors / specialists / hospitals / facilities. Confirm the address of the location they see the doctor at. Ask them to read the name off their RX bottle if they can't remember the doctor's name, or look up doctors in Google if struggling with spelling.</div>
+  </div>
+
+  <div id="doctorsNotListedContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Who is your primary care doctor? <span style="color:var(--text-muted)">(confirm address for each doctor)</span></div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you see any other doctors or specialists?</div></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:12px">💊 PRESCRIPTIONS</div>
+
+  <div class="route-selector">
+    <div class="route-card" onclick="selectRxStatus('listed', this)"><div class="route-icon">📋</div><div class="route-name">Prescriptions Listed</div><div class="route-desc">Already on file</div></div>
+    <div class="route-card" onclick="selectRxStatus('notlisted', this)"><div class="route-icon">➕</div><div class="route-name">Prescriptions Not Listed</div><div class="route-desc">Nothing on file</div></div>
+  </div>
+
+  <div id="rxListedContent" style="display:none">
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px">Confirm all information is up-to-date</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and I see some prescriptions listed for you, are you still taking &lt;Prescription Name&gt; at &lt;Dosage&gt; and getting that refilled &lt;Monthly / Quarterly&gt;?</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Are there any other prescriptions you are taking that we did not cover?</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and are you still getting those refilled at [Pharmacy Name]?</div></div>
+    <div class="note-card"><span class="card-icon">📋</span> Go through RX Name, Dosage, and Refill Frequency for every prescription.</div>
+  </div>
+
+  <div id="rxNotListedContent" style="display:none">
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px">Confirm all information is up-to-date</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Are you currently taking any prescriptions?</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and what Pharmacy are you using?</div></div>
+    <div class="note-card"><span class="card-icon">📋</span> Go through RX Name, Dosage, and Refill Frequency for every prescription.</div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(6)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(8)">Next → Plan Review</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 8 ═══════════════ -->
+<section class="step-section" id="step-8">
+  <div class="step-header">
+    <div class="step-counter">Step 8 of 9</div>
+    <h1 class="step-title">Plan Review &amp; Discussion</h1>
+    <p class="step-subtitle">Now simply have a conversation with the beneficiary. These steps are crucial for doing our job properly and finding the most beneficial option for the client. Remember — it is our job to educate and be professional; the client is relying on us to help them.</p>
+  </div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px">🏷️ SEP Indicators Flagged This Call</div>
+  <div id="sepSummary2"><span style="font-size:13px;color:var(--text-muted)">No SEP indicators flagged yet.</span></div>
+
+  <hr class="section-divider">
+
+  <div class="checklist-progress">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13px;font-weight:700;color:var(--text)">Discussion Checklist</span>
+      <span style="font-size:12px;color:var(--text-dim)" id="discussProgressLabel">0 / 7 covered</span>
+    </div>
+    <div class="checklist-progress-bar"><div class="checklist-progress-fill" id="discussProgressFill"></div></div>
+  </div>
+
+  <div style="display:flex;flex-direction:column" id="discussChecks">
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Review existing plan details</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Doctors / prescriptions in or out of network</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>OTC / giveback benefits</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Specialist copays</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Transportation</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Dental and vision coverage</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Confirm with beneficiary if there are any specific items they would like to hear more about?</span></label>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="note-card"><span class="card-icon">📋</span> Narrow down plan options and then confirm prescriptions would all be covered before we go any further.</div>
+  <div class="warning-card"><span class="card-icon">⚠️</span> <strong>If a doctor appears out of network</strong> — call the doctor's office or check their website before ruling the plan out.</div>
+
+  <hr class="section-divider">
+
+  <div class="checklist-progress">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13px;font-weight:700;color:var(--text)">📄 Presented Plan – Checklist</span>
+      <span style="font-size:12px;color:var(--text-dim)" id="sobProgressLabel">0 / 22 covered</span>
+    </div>
+    <div class="checklist-progress-bar"><div class="checklist-progress-fill" id="sobProgressFill"></div></div>
+  </div>
+  <p style="font-size:13px;color:var(--text-dim);margin:-4px 0 14px">Summary of Benefits items to confirm with the beneficiary once a plan is presented.</p>
+
+  <div style="display:flex;flex-direction:column" id="sobChecks">
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin:12px 0 6px">Plan Information</div>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Full Plan Name</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Carrier</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Plan Type (HMO / PPO / PFFS / SNP / PDP)</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Effective Date</span></label>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin:16px 0 6px">Medical Benefits</div>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Medical Deductible (including applicable services)</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Inpatient Hospital Coverage</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Outpatient Hospital Coverage</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Primary Care Doctor</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Specialty Doctor</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Inpatient Mental Health Coverage</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Outpatient Mental Health Coverage</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Preventive Services</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Emergency Care</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Urgent Care</span></label>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin:16px 0 6px">Prescription Drug Benefits</div>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Prescription Drug Cost Sharing (Rx Tiers)</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Estimated Drug Costs — In-Network / Out-of-Network</span></label>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin:16px 0 6px">Additional Review</div>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>PCP / Specialist Designation — In-Network / Out-of-Network</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Transportation Benefit (as applicable)</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Confirm whether the beneficiary is interested in reviewing additional benefits</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Review Medicare Advantage / Prescription Drug Plan Star Ratings</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Inform the beneficiary where the Summary of Benefits can be accessed</span></label>
+    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Answer any remaining beneficiary questions</span></label>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="objections-section">
+    <div class="objections-header">⚡ Objections</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I don't want to switch plans." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I completely understand, and we will not make any changes today unless you specifically say you want to. My role is to review your current plan to see what benefits you are eligible for and as an added benefit I will tell you what is going on in your area.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"Can you just mail me something?" <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I want to make sure whatever you are reviewing includes all of your doctors and prescriptions in network and aligns with what you are looking for. If you choose to enroll in a plan today all materials will be sent to you in the mail.</div></div></div></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(7)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(9)">Next → Closing</button>
+  </div>
+</section>
+
+<!-- ═══════════════ STEP 9 ═══════════════ -->
+<section class="step-section" id="step-9">
+  <div class="step-header">
+    <div class="step-counter">Step 9 of 9</div>
+    <h1 class="step-title">Closing &amp; Follow-Up</h1>
+    <p class="step-subtitle">Lock in trust, set the follow-up expectation, and ask for referrals.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now I am going to text you both my office phone number and cell phone number. Let's go ahead and save that as a contact in your phone. I will be following up with you on Monday to see if you have any questions.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Please feel free to reach out to me with any questions — I am your licensed agent, and please feel free to use me as a resource.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">You are now all set with your Medicare plan — you made an excellent decision today. Please feel free to give your friends and family my phone number if they could benefit from a similar review.</div></div>
+
+  <div class="tip-card"><span class="card-icon">💡</span> Send your number now — texting it while you're still on the call builds trust and gives them an easy way to reach you later.</div>
+
+  <div class="call-complete"><div class="check">✅</div><h3>Call Complete</h3></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(8)">← Back</button>
+    <button class="nav-btn primary" onclick="resetCall()">↺ New Call</button>
+  </div>
+</section>
+
+<!-- ═══════════════ REFERENCE — REQUIRED DISCLOSURES ═══════════════ -->
+<section class="step-section" id="step-disclosures">
+  <div class="step-header">
+    <div class="step-counter">📜 Reference</div>
+    <h1 class="step-title">Required Disclosures</h1>
+    <p class="step-subtitle">These must be read verbatim, at the point they occur in the call, on every call.</p>
+  </div>
+
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:8px">1. RECORDED LINE &amp; CALLBACK NUMBER — Step 1</div>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Read Verbatim</div>
+      <div class="disclosure-card-body">And [Name], I just want to let you know that all of my calls are recorded for quality and training purposes, and if we get disconnected can I call you back at this number, it looks like it is (###-###-####).</div>
+    </div>
+  </div>
+
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">2. FMO / SCOPE DISCLOSURE — Step 3</div>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Read Verbatim</div>
+      <div class="disclosure-card-body">We do not offer every plan available in your area. Currently we represent [#] Organizations which offer [#] Products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program (SHIP) to get information on all of your options.</div>
+    </div>
+  </div>
+
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">3. PRODUCTS OFFERED — Step 3</div>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Read Verbatim</div>
+      <div class="disclosure-card-body">And lastly, I work for Blueprint Health, a licensed insurance agency. In your area we offer:
+        <ul style="margin:10px 0 0 20px; padding:0; line-height:1.9">
+          <li>Medicare Advantage Plans</li>
+          <li>Medicare Advantage Prescription Drug Plans</li>
+          <li>Dental, Vision, Hearing Plans</li>
+          <li>Hospital Indemnity Plans</li>
+          <li>Short-Term Home Healthcare Plans</li>
+          <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">4. NO EFFECT ON COVERAGE — Step 3</div>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Read Verbatim</div>
+      <div class="disclosure-card-body">And I do just want to let you know that this conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.</div>
+    </div>
+  </div>
+
+  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> after reading the FMO and products-offered disclosures together (Step 3). Also confirm permission to verify the client's Medicare eligibility (Step 4).</div>
+</section>
+
+<!-- ═══════════════ REFERENCE — REBUTTALS ═══════════════ -->
+<section class="step-section" id="step-rebuttals">
+  <div class="step-header">
+    <div class="step-counter">⚡ Reference</div>
+    <h1 class="step-title">Quick Rebuttals</h1>
+    <p class="step-subtitle">Tap any objection to see exactly what to say</p>
+  </div>
+
+  <div class="rebuttal-category">
+    <div class="rebuttal-category-title">🕐 Stalling &amp; Indecision</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I need to think about it." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Totally understand — what's the one thing holding you back? A lot of times there's just one piece I haven't explained well enough. Let's talk through it right now so you have everything you need to decide.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"Let me talk to my family first." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Of course — that's a great idea, and nothing we do today changes your current coverage unless you choose to enroll. Let's go ahead and finish reviewing your options today so you have everything in writing to show them, and I'll be a resource for any questions they have too.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"Call me back later." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I totally get it — I just need a few more minutes to make sure I've reviewed everything available to you in your area. That way if we do talk again, I'll already have the full picture ready for you.</div></div></div></div>
+  </div>
+
+  <div class="rebuttal-category">
+    <div class="rebuttal-category-title">🔒 Trust &amp; Skepticism</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"Is this a scam?" <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Great question — I'm a licensed agent with Blueprint Health, and this call is recorded for quality and training. Nothing changes with your coverage unless you choose to enroll today, and everything we discuss will also be available in writing.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I already have an agent." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great that you have someone — I'm just going to do a quick review of what's currently available in your area so you have a second opinion. If your current plan is still the best fit, we'll confirm that together.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I don't want to give my Medicare number over the phone." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I completely understand the caution — this call is recorded, and I'm only using your information to look up what's available for your ZIP code, the same way any licensed agent or Medicare.gov would need to. You're always welcome to verify anything I tell you directly with Medicare.gov or 1-800-MEDICARE.</div></div></div></div>
+  </div>
+
+  <div class="rebuttal-category">
+    <div class="rebuttal-category-title">🏥 Coverage Objections</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I'm happy with my current plan." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great to hear, and I'm not here to talk you out of it. My job is just to make sure you're not missing anything available in your area — dental, vision, transportation, OTC allowances. If your plan really is the strongest fit, we'll confirm that together and you'll stay exactly where you are.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I don't want to switch plans." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I completely understand, and we will not make any changes today unless you specifically say you want to. My role is to review your current plan to see what benefits you are eligible for and as an added benefit I will tell you what is going on in your area.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"My doctor might not be covered." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's exactly why we check that before anything else — I'll confirm every one of your doctors and prescriptions are in network before we ever talk about switching. If they're not covered, we simply won't recommend that plan.</div></div></div></div>
+  </div>
+</section>
+
+</main>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav"></div>
+
+<script>
+let currentStep = 1;
+
+// ═══ STEP NAVIGATION ═══
+function goToStep(step) {
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
+  const id = `step-${step}`;
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('active');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  // Update sidebar
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    item.classList.remove('active');
+    const ds = item.dataset.step;
+    if (ds && typeof step === 'number' && parseInt(ds) < step) {
+      item.classList.add('completed');
+    }
+  });
+  if (typeof step === 'number') {
+    const active = document.querySelector(`.sidebar-item[data-step="${step}"]`);
+    if (active) active.classList.add('active');
+    currentStep = step;
+  }
+
+  updateMobileNav();
+}
+
+function toggleObjection(trigger) {
+  const obj = trigger.parentElement;
+  obj.classList.toggle('open');
+}
+
+function resetCall() {
+  document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('completed'));
+  document.querySelectorAll('.objection').forEach(o => o.classList.remove('open'));
+
+  // Reset text/number/date inputs
+  document.querySelectorAll('input[type="text"], input[type="number"], input[type="date"], input[type="tel"]').forEach(i => i.value = '');
+  document.querySelectorAll('select').forEach(s => s.value = '');
+  document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+  document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.getElementById('scopeConfirmNo').checked = true;
+  document.getElementById('lookupConfirmNo').checked = true;
+  document.getElementById('addressMatchYes').checked = true;
+
+  ['vaRxResult','coverageRouteResult','sepSummary','sepSummary2','scopeConfirmResult','lookupConfirmResult'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = '';
+  });
+  document.getElementById('coverageNoneContent').style.display = 'none';
+  document.getElementById('coverageVaContent').style.display = 'none';
+  document.getElementById('coverageTricareContent').style.display = 'none';
+  document.getElementById('coverageOtherContent').style.display = 'none';
+  document.getElementById('movContent').style.display = 'none';
+  document.getElementById('addressMatchesContent').style.display = 'block';
+  document.getElementById('decisionYesContent').style.display = 'none';
+  document.getElementById('decisionNoContent').style.display = 'none';
+  document.getElementById('partsAbYesContent').style.display = 'none';
+  document.getElementById('partsAbNoContent').style.display = 'none';
+  document.getElementById('medicarePlanContent').style.display = 'none';
+  document.getElementById('pdpNoPlanContent').style.display = 'none';
+  document.getElementById('medigapContent').style.display = 'none';
+  document.getElementById('originalContent').style.display = 'none';
+  document.getElementById('doctorsListedContent').style.display = 'none';
+  document.getElementById('doctorsNotListedContent').style.display = 'none';
+  document.getElementById('rxListedContent').style.display = 'none';
+  document.getElementById('rxNotListedContent').style.display = 'none';
+  document.querySelectorAll('.route-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('medicaidNote').style.display = 'none';
+  document.getElementById('transportNote').style.display = 'none';
+  document.getElementById('surgeryNote').style.display = 'none';
+  document.getElementById('denturesNote').style.display = 'none';
+  document.getElementById('chronicNote').style.display = 'none';
+  document.getElementById('otherHealthNote').style.display = 'none';
+  document.getElementById('coverageChangeNote').style.display = 'none';
+  updateDiscussProgress();
+  updateSobProgress();
+
+  goToStep(1);
+}
+
+function updateMobileNav() {
+  const nav = document.getElementById('mobileNav');
+  let html = '';
+  for (let i = 1; i <= 9; i++) {
+    html += `<button class="${i === currentStep ? 'active' : ''}" onclick="goToStep(${i})">${i}</button>`;
+  }
+  html += `<button onclick="goToStep('disclosures')">📜</button>`;
+  html += `<button onclick="goToStep('rebuttals')">⚡</button>`;
+  nav.innerHTML = html;
+}
+
+// ═══ STEP 2 — PARTS A/B, DECISION-MAKER & OTHER COVERAGE ═══
+function toggleDecisionMaker() {
+  const yes = document.getElementById('decisionYes').checked;
+  document.getElementById('decisionYesContent').style.display = yes ? 'block' : 'none';
+  document.getElementById('decisionNoContent').style.display = yes ? 'none' : 'block';
+}
+
+function togglePartsAb() {
+  const yes = document.getElementById('partsAbYes').checked;
+  document.getElementById('partsAbYesContent').style.display = yes ? 'block' : 'none';
+  document.getElementById('partsAbNoContent').style.display = yes ? 'none' : 'block';
+}
+
+function handleOtherCoverage() {
+  const val = document.getElementById('otherCoverageSelect').value;
+  document.getElementById('coverageNoneContent').style.display = val === 'none' ? 'block' : 'none';
+  document.getElementById('coverageVaContent').style.display = val === 'va' ? 'block' : 'none';
+  document.getElementById('coverageTricareContent').style.display = val === 'tricare' ? 'block' : 'none';
+  document.getElementById('coverageOtherContent').style.display = val === 'other' ? 'block' : 'none';
+  document.getElementById('coverageRouteResult').innerHTML = '';
+}
+
+function handleVaDoctors() {
+  const civilian = document.getElementById('vaDoctorsCivilian').checked;
+  const vaOnly = document.getElementById('vaDoctorsVaOnly').checked;
+  document.getElementById('vaDoctorsCivilianNote').style.display = civilian ? 'block' : 'none';
+  document.getElementById('vaDoctorsVaOnlyNote').style.display = vaOnly ? 'block' : 'none';
+}
+
+function handleVaRx() {
+  const vaOnly = document.getElementById('vaRxYes').checked;
+  const result = document.getElementById('vaRxResult');
+  const routeResult = document.getElementById('coverageRouteResult');
+  if (vaOnly) {
+    result.innerHTML = '<div class="warning-card"><span class="card-icon">⚠️</span> Fills all prescriptions through the VA only.</div>';
+    routeResult.innerHTML = '<span class="state-badge orange">📋 Route: MA-Only (no drug coverage needed)</span>';
+  } else {
+    result.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> Fills prescriptions outside the VA.</div>';
+    routeResult.innerHTML = '<span class="state-badge green">📋 Route: MAPD (Medicare Advantage with Prescription Drug coverage)</span>';
+  }
+}
+
+// ═══ SHARED — VERBAL CONFIRMATION TOGGLE ═══
+function updateConfirmState(resultId, confirmed) {
+  const el = document.getElementById(resultId);
+  if (!el) return;
+  el.innerHTML = confirmed
+    ? '<div class="success-card"><span class="card-icon">✅</span> Verbal permission obtained — continue.</div>'
+    : '<div class="warning-card"><span class="card-icon">⚠️</span> Do not proceed until you obtain verbal confirmation.</div>';
+}
+
+// ═══ STEP 4 — MOV / ADDRESS ═══
+function toggleMov() {
+  const different = document.getElementById('addressMatchNo').checked;
+  document.getElementById('movContent').style.display = different ? 'block' : 'none';
+  document.getElementById('addressMatchesContent').style.display = different ? 'none' : 'block';
+  updateSepFlags();
+}
+
+// ═══ STEP 5 — MEDIGAP / ORIGINAL MEDICARE SELECTOR ═══
+// ═══ STEP 5 — MEDICARE PLAN APPEARS / PDP-NO PLAN SELECTOR ═══
+function selectPlanStatus(type, el) {
+  el.closest('.route-selector').querySelectorAll('.route-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('medicarePlanContent').style.display = type === 'medicare' ? 'block' : 'none';
+  document.getElementById('pdpNoPlanContent').style.display = type === 'pdpnone' ? 'block' : 'none';
+}
+
+function selectCoverageType(type, el) {
+  el.closest('.route-selector').querySelectorAll('.route-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('medigapContent').style.display = type === 'medigap' ? 'block' : 'none';
+  document.getElementById('originalContent').style.display = type === 'original' ? 'block' : 'none';
+}
+
+// ═══ STEP 7 — DOCTORS / PRESCRIPTIONS LISTED TOGGLES ═══
+function selectDoctorsStatus(type, el) {
+  el.closest('.route-selector').querySelectorAll('.route-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('doctorsListedContent').style.display = type === 'listed' ? 'block' : 'none';
+  document.getElementById('doctorsNotListedContent').style.display = type === 'notlisted' ? 'block' : 'none';
+}
+
+function selectRxStatus(type, el) {
+  el.closest('.route-selector').querySelectorAll('.route-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('rxListedContent').style.display = type === 'listed' ? 'block' : 'none';
+  document.getElementById('rxNotListedContent').style.display = type === 'notlisted' ? 'block' : 'none';
+}
+
+// ═══ STEP 5 — SEP INDICATOR FLAGS ═══
+function updateSepFlags() {
+  const medicaid = document.getElementById('chkMedicaid').checked;
+  const transport = document.getElementById('chkTransport').checked;
+  const surgery = document.getElementById('chkSurgery').checked;
+  const dentures = document.getElementById('chkDentures').checked;
+  const chronic = document.getElementById('chkChronic').checked;
+  const otherHealth = document.getElementById('chkOtherHealth').checked;
+  const coverageChange = document.getElementById('chkCoverageChange').checked;
+  const mov = document.getElementById('addressMatchNo') && document.getElementById('addressMatchNo').checked;
+
+  document.getElementById('medicaidNote').style.display = medicaid ? 'block' : 'none';
+  document.getElementById('transportNote').style.display = transport ? 'block' : 'none';
+  document.getElementById('surgeryNote').style.display = surgery ? 'block' : 'none';
+  document.getElementById('denturesNote').style.display = dentures ? 'block' : 'none';
+  document.getElementById('chronicNote').style.display = chronic ? 'block' : 'none';
+  document.getElementById('otherHealthNote').style.display = otherHealth ? 'block' : 'none';
+  document.getElementById('coverageChangeNote').style.display = coverageChange ? 'block' : 'none';
+
+  let badges = '';
+  if (medicaid) badges += '<span class="state-badge purple">🏷️ SEP — Integrated Plan (Medicaid)</span> ';
+  if (chronic) badges += '<span class="state-badge purple">🏷️ SEP — Chronic Condition</span> ';
+  if (mov) badges += '<span class="state-badge purple">🏷️ SEP — MOV (Moved)</span> ';
+
+  const html = badges || '<span style="font-size:13px;color:var(--text-muted)">No SEP indicators flagged yet — check any that apply above.</span>';
+  document.getElementById('sepSummary').innerHTML = html;
+  const summary2 = document.getElementById('sepSummary2');
+  if (summary2) summary2.innerHTML = html;
+}
+
+// ═══ STEP 8 — DISCUSSION CHECKLIST PROGRESS ═══
+function updateDiscussProgress() {
+  const boxes = document.querySelectorAll('#discussChecks input[type="checkbox"]');
+  const total = boxes.length;
+  let checked = 0;
+  boxes.forEach(b => { if (b.checked) checked++; });
+  const label = document.getElementById('discussProgressLabel');
+  const fill = document.getElementById('discussProgressFill');
+  if (label) label.textContent = checked + ' / ' + total + ' covered';
+  if (fill) fill.style.width = (total ? (checked / total * 100) : 0) + '%';
+}
+
+// ═══ STEP 8 — PRESENTED PLAN (SUMMARY OF BENEFITS) CHECKLIST PROGRESS ═══
+function updateSobProgress() {
+  const boxes = document.querySelectorAll('#sobChecks input[type="checkbox"]');
+  const total = boxes.length;
+  let checked = 0;
+  boxes.forEach(b => { if (b.checked) checked++; });
+  const label = document.getElementById('sobProgressLabel');
+  const fill = document.getElementById('sobProgressFill');
+  if (label) label.textContent = checked + ' / ' + total + ' covered';
+  if (fill) fill.style.width = (total ? (checked / total * 100) : 0) + '%';
+}
+
+// ═══ INIT ═══
+updateMobileNav();
+</script>
+</body>
+</html>
