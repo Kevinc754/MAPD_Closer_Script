@@ -784,7 +784,7 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, and once again my name is [First Name] and my role here today is to review the Medicare options available to you in your area and to see whether you may qualify for additional benefits and coverage that align with your needs. To start off can I please get your Zip code and date of birth?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, and once again my name is [First Name] and my role here today is to review the Medicare options available to you in your area and to see whether you may qualify for additional benefits that align with your needs. To start off can I please get your Zip code and date of birth?</div></div>
 
   <div class="note-card"><span class="card-icon">📋</span> <strong>[Enter ZIP code in Sunfire]</strong> — pull their report while you continue the conversation.</div>
 
@@ -947,23 +947,6 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div class="agent-line">
-    <span class="agent-label">Agent</span>
-    <div class="disclosure-card">
-      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">And lastly, I work for Blueprint Health, a licensed insurance agency. In your area we offer:
-        <ul style="margin:10px 0 0 20px; padding:0; line-height:1.9">
-          <li>Medicare Advantage Plans</li>
-          <li>Medicare Advantage Prescription Drug Plans</li>
-          <li>Dental, Vision, Hearing Plans</li>
-          <li>Hospital Indemnity Plans</li>
-          <li>Short-Term Home Healthcare Plans</li>
-          <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
   <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation and discuss these options with you?</div></div>
   <div class="confirm-wrap">
     <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
@@ -980,9 +963,31 @@ select option { background: var(--bg-card); }
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
       <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">And I do just want to let you know that this conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.</div>
+      <div class="disclosure-card-body">And lastly, I work for Blueprint Health, a licensed insurance agency. In your area we offer:
+        <ul style="margin:10px 0 0 20px; padding:0; line-height:1.9">
+          <li>Medicare Advantage Plans</li>
+          <li>Medicare Advantage Prescription Drug Plans</li>
+          <li>Dental, Vision, Hearing Plans</li>
+          <li>Hospital Indemnity Plans</li>
+          <li>Short-Term Home Healthcare Plans</li>
+          <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
+        </ul>
+        This conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.
+      </div>
     </div>
   </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation and discuss these options with you?</div></div>
+  <div class="confirm-wrap">
+    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
+    <div class="confirm-toggle">
+      <input type="radio" id="scopeConfirm2Yes" name="scopeConfirm2" value="yes" onchange="updateConfirmState('scopeConfirm2Result', true)">
+      <label for="scopeConfirm2Yes">✓ Yes</label>
+      <input type="radio" id="scopeConfirm2No" name="scopeConfirm2" value="no" onchange="updateConfirmState('scopeConfirm2Result', false)" checked>
+      <label for="scopeConfirm2No">Not Yet</label>
+    </div>
+  </div>
+  <div id="scopeConfirm2Result"></div>
 
   <div class="step-nav">
     <button class="nav-btn" onclick="goToStep(2)">← Back</button>
@@ -998,33 +1003,29 @@ select option { background: var(--bg-card); }
     <p class="step-subtitle">Get permission to look them up, then verify date of birth and mailing address once their profile loads.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Okay so next we will check your eligibility through your Medicare Parts A and B to see what benefits you qualify for.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Okay so next we will check your eligibility through your Medicare Parts A and B to see what benefits you qualify for. Could you grab your Red, White, and Blue Medicare card and read me the numbers and letters across the middle exactly as they appear?</div></div>
 
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
       <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">Do I have your permission to verify your Medicare Eligibility.</div>
+      <div class="disclosure-card-body">Perfect, and just to confirm, do I have your permission to look you up in the Medicare system to confirm your eligibility?</div>
     </div>
   </div>
   <div class="confirm-wrap">
     <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
     <div class="confirm-toggle">
-      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState('lookupConfirmResult', true)">
+      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState(\'lookupConfirmResult\', true)">
       <label for="lookupConfirmYes">✓ Yes</label>
-      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState('lookupConfirmResult', false)" checked>
+      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState(\'lookupConfirmResult\', false)" checked>
       <label for="lookupConfirmNo">Not Yet</label>
     </div>
   </div>
   <div id="lookupConfirmResult"></div>
 
-  <hr class="section-divider">
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect. Could you please grab your Red, White, and Blue Medicare card and read me the numbers and letters across the middle exactly as they appear?</div></div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Thank you very much Mr./Ms. [Last Name]. Please allow me a brief moment while I verify your Medicare eligibility and review the options available in your area. <span style="color:var(--text-muted)">[Pause]</span></div></div>
-
   <div class="tip-card"><span class="card-icon">💡</span> <strong>While the report loads</strong> — build rapport. Ask about their day, how long they've had Medicare, family. "Are you originally from [STATE] or did you move there?" "Are you still working or fully retired?" Keep them talking and comfortable — this also buys time for the report to load.</div>
+
+  <hr class="section-divider">
 
   <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect Mr./Ms. [Last Name], I do have your Medicare eligibility verified. For security and accuracy purposes, I'd just like to quickly confirm the information I'm seeing on the account.</div></div>
 
@@ -1136,7 +1137,7 @@ select option { background: var(--bg-card); }
     <label class="check-row"><input type="checkbox" id="chkDentures" onchange="updateSepFlags()"><span>How are your teeth? Do you need dentures or any dental work?</span></label>
     <div id="denturesNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Review Dental Benefits</div>
 
-    <label class="check-row sep-row"><input type="checkbox" id="chkChronic" onchange="updateSepFlags()"><span>Medicare recognizes certain chronic conditions as qualifying for additional benefits — things like diabetes, heart disease, COPD, kidney disease and other heart and lung related issues. Have you ever been diagnosed with any of these conditions?</span></label>
+    <label class="check-row sep-row"><input type="checkbox" id="chkChronic" onchange="updateSepFlags()"><span>Medicare recognizes certain chronic conditions as qualifying for additional benefits — things like diabetes, heart disease, COPD, kidney disease and other heart and lung related issues. Have you ever been diagnosed or treated for any of these conditions?</span></label>
     <div id="chronicNote" style="display:none" class="note-card"><span class="card-icon">📋</span> <strong>Note:</strong> Review C-SNP Options. SEP Indicator – Chronic Condition</div>
 
     <label class="check-row"><input type="checkbox" id="chkOtherHealth" onchange="updateSepFlags()"><span>What about any conditions like High Blood Pressure, High Cholesterol, or anything like that?</span></label>
@@ -1191,6 +1192,8 @@ select option { background: var(--bg-card); }
     <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you see any other doctors or specialists?</div></div>
   </div>
 
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you have any preferred hospitals or medical facilities that are important for you to continue using?</div></div>
+
   <hr class="section-divider">
 
   <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:12px">💊 PRESCRIPTIONS</div>
@@ -1214,6 +1217,9 @@ select option { background: var(--bg-card); }
     <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and what Pharmacy are you using?</div></div>
     <div class="note-card"><span class="card-icon">📋</span> Go through RX Name, Dosage, and Refill Frequency for every prescription.</div>
   </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">[as applicable] And are there any medications that are especially expensive for you right now or that you have had concerns about regarding coverage or copays?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, I know prescription costs are important to people so we will definitely look at those closely today.</div></div>
 
   <div class="step-nav">
     <button class="nav-btn" onclick="goToStep(6)">← Back</button>
@@ -1362,7 +1368,7 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">3. PRODUCTS OFFERED — Step 3</div>
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">3. PRODUCTS OFFERED &amp; NO EFFECT ON COVERAGE — Step 3</div>
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
@@ -1376,20 +1382,12 @@ select option { background: var(--bg-card); }
           <li>Short-Term Home Healthcare Plans</li>
           <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
         </ul>
+        This conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.
       </div>
     </div>
   </div>
 
-  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">4. NO EFFECT ON COVERAGE — Step 3</div>
-  <div class="agent-line">
-    <span class="agent-label">Agent</span>
-    <div class="disclosure-card">
-      <div class="disclosure-card-header">📜 Read Verbatim</div>
-      <div class="disclosure-card-body">And I do just want to let you know that this conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.</div>
-    </div>
-  </div>
-
-  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> after reading the FMO and products-offered disclosures together (Step 3). Also confirm permission to verify the client's Medicare eligibility (Step 4).</div>
+  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> — once after the first required disclosure, and again after the second (both in Step 3). Also confirm permission to look the client up in the Medicare system to confirm eligibility (Step 4).</div>
 </section>
 
 <!-- ═══════════════ REFERENCE — REBUTTALS ═══════════════ -->
@@ -1472,10 +1470,11 @@ function resetCall() {
   document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
   document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
   document.getElementById('scopeConfirmNo').checked = true;
+  document.getElementById('scopeConfirm2No').checked = true;
   document.getElementById('lookupConfirmNo').checked = true;
   document.getElementById('addressMatchYes').checked = true;
 
-  ['vaRxResult','coverageRouteResult','sepSummary','sepSummary2','scopeConfirmResult','lookupConfirmResult'].forEach(id => {
+  ['vaRxResult','coverageRouteResult','sepSummary','sepSummary2','scopeConfirmResult','scopeConfirm2Result','lookupConfirmResult'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
@@ -1668,6 +1667,9 @@ function updateSobProgress() {
 
 // ═══ INIT ═══
 updateMobileNav();
+</script>
+</body>
+</html>
 </script>
 </body>
 </html>
