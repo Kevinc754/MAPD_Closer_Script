@@ -770,23 +770,47 @@ select option { background: var(--bg-card); }
     <p class="step-subtitle">Confirm who you're speaking with, disclose the recorded line, and get their ZIP and Date of Birth to pull them up in Sunfire.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Hello my name is [First and Last Name] and I am a licensed agent with Blueprint Health. Who do I have the pleasure of speaking with?</div></div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Good morning/afternoon Mr./Ms. [Last Name], how are you doing today?</div></div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I'm glad to hear that.</div></div>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">Hello my name is [First and Last Name] and I am a licensed agent with Blueprint Health. Who do I have the pleasure of speaking with?</div>
+    </div>
+  </div>
 
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
       <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">And [Name], I just want to let you know that all of my calls are recorded for quality and training purposes, and if we get disconnected can I call you back at this number, it looks like it is (###-###-####).</div>
+      <div class="disclosure-card-body">Hi [Name], I hope you are doing well today. I just want to let you know that all of my calls are recorded for quality and training purposes, and if we get disconnected can I call you back at this number? Perfect, it looks like it is (###-###-####), is that correct?</div>
     </div>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, and once again my name is [First Name] and my role here today is to review the Medicare options available to you in your area and to see whether you may qualify for additional benefits that align with your needs. To start off can I please get your Zip code and date of birth?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, just so I can see all of the options available in your area can I please have your zip code and date of birth?</div></div>
 
   <div class="note-card"><span class="card-icon">📋</span> <strong>[Enter ZIP code in Sunfire]</strong> — pull their report while you continue the conversation.</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Awesome, I actually just helped someone in your area so I know there are some great options! As you may know this benefit is tied to your Medicare plan, so let me go ahead and read through a quick government required disclosure and then I will walk you through the process, and that is:</div></div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">We do not offer every plan available in your area. Currently we represent [#] Organizations which offer [#] Products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program (SHIP) to get information on all of your options.</div>
+    </div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation</div></div>
+  <div class="confirm-wrap">
+    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
+    <div class="confirm-toggle">
+      <input type="radio" id="step1ConfirmYes" name="step1Confirm" value="yes" onchange="updateConfirmState('step1ConfirmResult', true)">
+      <label for="step1ConfirmYes">✓ Yes</label>
+      <input type="radio" id="step1ConfirmNo" name="step1Confirm" value="no" onchange="updateConfirmState('step1ConfirmResult', false)" checked>
+      <label for="step1ConfirmNo">Not Yet</label>
+    </div>
+  </div>
+  <div id="step1ConfirmResult"></div>
 
   <div class="tip-card"><span class="card-icon">💡</span> Keep the tone warm and unrushed — this is the client's first impression of the call.</div>
 
@@ -803,7 +827,7 @@ select option { background: var(--bg-card); }
     <div class="objection">
       <div class="objection-trigger" onclick="toggleObjection(this)">"I'm happy with my current plan." <span class="arrow">▼</span></div>
       <div class="objection-body">
-        <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great to hear — I'm not here to switch anything on you. My job today is just to review what's available in your area and make sure you're not missing out on anything. If your current plan really is the best fit, we'll confirm that together.</div></div>
+        <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great to hear — I'm not here to switch anything on you. My job today is just to review what's available in your area and make sure you're not missing out on anything. If your current plan really is the fit, we'll confirm that together.</div></div>
       </div>
     </div>
 
@@ -828,7 +852,11 @@ select option { background: var(--bg-card); }
     <p class="step-subtitle">Confirm Medicare Parts A &amp; B, confirm who makes healthcare decisions, then screen for other health coverage.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And just to confirm, are you currently enrolled in Medicare Parts A &amp; B?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Thank you, as you are probably aware there have been a lot of changes to Medicare this year. My role here today is to review your benefits to see if you are receiving everything you are entitled to, which can often result in us getting you some extra money back on a spending card or additional benefits. How does that sound?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, so let's go ahead and start by confirming your eligibility:</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Are you currently enrolled in Medicare Parts A &amp; B?</div></div>
 
   <div style="display:flex;justify-content:center;margin:16px 0">
     <div class="calc-radio-group" style="max-width:500px;width:100%">
@@ -937,39 +965,19 @@ select option { background: var(--bg-card); }
     <p class="step-subtitle">Read the required Medicare disclosures, list what Blueprint Health offers, and get verbal permission to proceed.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, you are eligible to continue with our conversation today. And before we review the options available to you in your area, I do just have to read these brief Medicare disclosures to maintain compliance, and that is first to let you know that:</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, you are eligible to continue with our conversation today. And before we review the options available to you in your area, I do just have to read one more required disclosure, and that is just to let you know:</div></div>
 
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
       <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">We do not offer every plan available in your area. Currently we represent [#] Organizations which offer [#] Products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program (SHIP) to get information on all of your options.</div>
-    </div>
-  </div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation?</div></div>
-  <div class="confirm-wrap">
-    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
-    <div class="confirm-toggle">
-      <input type="radio" id="scopeConfirmYes" name="scopeConfirm" value="yes" onchange="updateConfirmState('scopeConfirmResult', true)">
-      <label for="scopeConfirmYes">✓ Yes</label>
-      <input type="radio" id="scopeConfirmNo" name="scopeConfirm" value="no" onchange="updateConfirmState('scopeConfirmResult', false)" checked>
-      <label for="scopeConfirmNo">Not Yet</label>
-    </div>
-  </div>
-  <div id="scopeConfirmResult"></div>
-
-  <div class="agent-line">
-    <span class="agent-label">Agent</span>
-    <div class="disclosure-card">
-      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">And lastly, I work for Blueprint Health, a licensed insurance agency. In your area we offer:
+      <div class="disclosure-card-body">I work for Blueprint Health, a licensed insurance agency. In your area we offer:
         <ul style="margin:10px 0 0 20px; padding:0; line-height:1.9">
-          <li>Medicare Advantage Plans</li>
-          <li>Medicare Advantage Prescription Drug Plans</li>
-          <li>Dental, Vision, Hearing Plans</li>
-          <li>Hospital Indemnity Plans</li>
-          <li>Short-Term Home Healthcare Plans</li>
+          <li>Medicare Advantage</li>
+          <li>Medicare Advantage Prescription Drug</li>
+          <li>Dental, Vision, Hearing</li>
+          <li>Hospital Indemnity</li>
+          <li>Short-Term Home Healthcare</li>
           <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
         </ul>
         This conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.
@@ -981,13 +989,13 @@ select option { background: var(--bg-card); }
   <div class="confirm-wrap">
     <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
     <div class="confirm-toggle">
-      <input type="radio" id="scopeConfirm2Yes" name="scopeConfirm2" value="yes" onchange="updateConfirmState('scopeConfirm2Result', true)">
-      <label for="scopeConfirm2Yes">✓ Yes</label>
-      <input type="radio" id="scopeConfirm2No" name="scopeConfirm2" value="no" onchange="updateConfirmState('scopeConfirm2Result', false)" checked>
-      <label for="scopeConfirm2No">Not Yet</label>
+      <input type="radio" id="scopeConfirmYes" name="scopeConfirm" value="yes" onchange="updateConfirmState('scopeConfirmResult', true)">
+      <label for="scopeConfirmYes">✓ Yes</label>
+      <input type="radio" id="scopeConfirmNo" name="scopeConfirm" value="no" onchange="updateConfirmState('scopeConfirmResult', false)" checked>
+      <label for="scopeConfirmNo">Not Yet</label>
     </div>
   </div>
-  <div id="scopeConfirm2Result"></div>
+  <div id="scopeConfirmResult"></div>
 
   <div class="step-nav">
     <button class="nav-btn" onclick="goToStep(2)">← Back</button>
@@ -1015,9 +1023,9 @@ select option { background: var(--bg-card); }
   <div class="confirm-wrap">
     <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
     <div class="confirm-toggle">
-      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState(\'lookupConfirmResult\', true)">
+      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState('lookupConfirmResult', true)">
       <label for="lookupConfirmYes">✓ Yes</label>
-      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState(\'lookupConfirmResult\', false)" checked>
+      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState('lookupConfirmResult', false)" checked>
       <label for="lookupConfirmNo">Not Yet</label>
     </div>
   </div>
@@ -1243,25 +1251,44 @@ select option { background: var(--bg-card); }
   <div class="checklist-progress">
     <div style="display:flex;justify-content:space-between;align-items:center">
       <span style="font-size:13px;font-weight:700;color:var(--text)">Discussion Checklist</span>
-      <span style="font-size:12px;color:var(--text-dim)" id="discussProgressLabel">0 / 7 covered</span>
+      <span style="font-size:12px;color:var(--text-dim)" id="discussProgressLabel">0 / 5 covered</span>
     </div>
     <div class="checklist-progress-bar"><div class="checklist-progress-fill" id="discussProgressFill"></div></div>
   </div>
 
   <div style="display:flex;flex-direction:column" id="discussChecks">
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Review existing plan details</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Doctors / prescriptions in or out of network</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>OTC / giveback benefits</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Specialist copays</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Transportation</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Dental and vision coverage</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateDiscussProgress()"><span>Confirm with beneficiary if there are any specific items they would like to hear more about?</span></label>
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin:4px 0 4px">Review current plan details – Set Your Foundation:</div>
+    <label class="check-row" style="margin-left:16px"><input type="checkbox" onchange="updateDiscussProgress()"><span>Primary Copay</span></label>
+    <label class="check-row" style="margin-left:16px"><input type="checkbox" onchange="updateDiscussProgress()"><span>Specialist Copay</span></label>
+    <label class="check-row" style="margin-left:16px"><input type="checkbox" onchange="updateDiscussProgress()"><span>Deductible</span></label>
+    <label class="check-row" style="margin-left:16px"><input type="checkbox" onchange="updateDiscussProgress()"><span>OTC / Part B Giveback</span></label>
+    <label class="check-row" style="margin-left:16px"><input type="checkbox" onchange="updateDiscussProgress()"><span>Other Important Items client mentions (dental, transportation)</span></label>
   </div>
 
   <hr class="section-divider">
 
   <div class="note-card"><span class="card-icon">📋</span> Narrow down plan options and then confirm prescriptions would all be covered before we go any further.</div>
   <div class="warning-card"><span class="card-icon">⚠️</span> <strong>If a doctor appears out of network</strong> — call the doctor's office or check their website before ruling the plan out.</div>
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">[Review other plan options, find knock out benefits and make the comparison]</div></div>
+
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="agent-bubble">Ok [Name], looks like I am going to be able to make your day here!
+      <div style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin:10px 0 4px">Examples</div>
+      <ul style="margin:0 0 0 20px; padding:0; line-height:1.9">
+        <li>We can drop that [Specialist Copay] to [$] and save you [$] every time you see [Specialist's Name]</li>
+        <li>That [Max Out of Pocket] we are going to drop that down from [current amount] to [new plan amount]</li>
+        <li>[Etc. — run through 5 or so bullets to build the value in the plan]</li>
+        <li>All of your doctors are in-network and your prescriptions are covered, so there are no changes there.</li>
+      </ul>
+      <div style="margin-top:10px">How does that sound?</div>
+    </div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I agree, it does sound great. Let me go ahead and talk you through everything here so you understand all of the details and please ask me any questions that you may have.</div></div>
 
   <hr class="section-divider">
 
@@ -1359,7 +1386,7 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">2. FMO / SCOPE DISCLOSURE — Step 3</div>
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">2. FMO / SCOPE DISCLOSURE — Step 1</div>
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
@@ -1373,13 +1400,13 @@ select option { background: var(--bg-card); }
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
       <div class="disclosure-card-header">📜 Read Verbatim</div>
-      <div class="disclosure-card-body">And lastly, I work for Blueprint Health, a licensed insurance agency. In your area we offer:
+      <div class="disclosure-card-body">I work for Blueprint Health, a licensed insurance agency. In your area we offer:
         <ul style="margin:10px 0 0 20px; padding:0; line-height:1.9">
-          <li>Medicare Advantage Plans</li>
-          <li>Medicare Advantage Prescription Drug Plans</li>
-          <li>Dental, Vision, Hearing Plans</li>
-          <li>Hospital Indemnity Plans</li>
-          <li>Short-Term Home Healthcare Plans</li>
+          <li>Medicare Advantage</li>
+          <li>Medicare Advantage Prescription Drug</li>
+          <li>Dental, Vision, Hearing</li>
+          <li>Hospital Indemnity</li>
+          <li>Short-Term Home Healthcare</li>
           <li>And Critical Illness Coverage for conditions like Cancer, Heart Attack and Stroke.</li>
         </ul>
         This conversation has no effect on your current or future coverage unless you chose to enroll in a plan. Talking with me does not obligate you to enroll in a plan.
@@ -1387,7 +1414,7 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> — once after the first required disclosure, and again after the second (both in Step 3). Also confirm permission to look the client up in the Medicare system to confirm eligibility (Step 4).</div>
+  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> — once after the required disclosure in Step 3. Also confirm permission to look the client up in the Medicare system to confirm eligibility (Step 4).</div>
 </section>
 
 <!-- ═══════════════ REFERENCE — REBUTTALS ═══════════════ -->
@@ -1469,12 +1496,12 @@ function resetCall() {
   document.querySelectorAll('select').forEach(s => s.value = '');
   document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
   document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  document.getElementById('step1ConfirmNo').checked = true;
   document.getElementById('scopeConfirmNo').checked = true;
-  document.getElementById('scopeConfirm2No').checked = true;
   document.getElementById('lookupConfirmNo').checked = true;
   document.getElementById('addressMatchYes').checked = true;
 
-  ['vaRxResult','coverageRouteResult','sepSummary','sepSummary2','scopeConfirmResult','scopeConfirm2Result','lookupConfirmResult'].forEach(id => {
+  ['vaRxResult','coverageRouteResult','sepSummary','sepSummary2','step1ConfirmResult','scopeConfirmResult','lookupConfirmResult'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
@@ -1667,9 +1694,6 @@ function updateSobProgress() {
 
 // ═══ INIT ═══
 updateMobileNav();
-</script>
-</body>
-</html>
 </script>
 </body>
 </html>
