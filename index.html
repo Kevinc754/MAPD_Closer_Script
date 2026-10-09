@@ -290,6 +290,33 @@ body {
 }
 .agent-bubble strong { color: var(--accent); font-weight: 600; }
 
+/* Agent "read" check button */
+.agent-check {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.18);
+  background: transparent;
+  color: transparent;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  padding: 0;
+}
+.agent-check:hover { border-color: var(--green); color: rgba(16,185,129,0.5); }
+.agent-line.checked .agent-check { background: var(--green); border-color: var(--green); color: #fff; }
+.agent-line.checked .agent-bubble,
+.agent-line.checked .disclosure-card { opacity: 0.45; }
+
+
 /* Tip / Note cards */
 .tip-card, .note-card, .warning-card, .success-card, .target-card, .disclosure-card {
   border-radius: var(--radius);
@@ -734,14 +761,13 @@ select option { background: var(--bg-card); }
   <div class="sidebar-section">
     <div class="sidebar-section-title">CALL STEPS</div>
     <div class="sidebar-item active" data-step="1" onclick="goToStep(1)"><span class="step-num">1</span> Icebreaker</div>
-    <div class="sidebar-item" data-step="2" onclick="goToStep(2)"><span class="step-num">2</span> Eligibility &amp; Coverage</div>
-    <div class="sidebar-item" data-step="3" onclick="goToStep(3)"><span class="step-num">3</span> Scope &amp; FMO</div>
-    <div class="sidebar-item" data-step="4" onclick="goToStep(4)"><span class="step-num">4</span> Verify in System</div>
-    <div class="sidebar-item" data-step="5" onclick="goToStep(5)"><span class="step-num">5</span> Current Coverage</div>
-    <div class="sidebar-item" data-step="6" onclick="goToStep(6)"><span class="step-num">6</span> SEP Indicators</div>
-    <div class="sidebar-item" data-step="7" onclick="goToStep(7)"><span class="step-num">7</span> Doctors &amp; Rx</div>
-    <div class="sidebar-item" data-step="8" onclick="goToStep(8)"><span class="step-num">8</span> Plan Review</div>
-    <div class="sidebar-item" data-step="9" onclick="goToStep(9)"><span class="step-num">9</span> Closing</div>
+    <div class="sidebar-item" data-step="2" onclick="goToStep(2)"><span class="step-num">2</span> Verify in System</div>
+    <div class="sidebar-item" data-step="3" onclick="goToStep(3)"><span class="step-num">3</span> Scope of Appointment</div>
+    <div class="sidebar-item" data-step="4" onclick="goToStep(4)"><span class="step-num">4</span> Current Coverage</div>
+    <div class="sidebar-item" data-step="5" onclick="goToStep(5)"><span class="step-num">5</span> Needs Analysis</div>
+    <div class="sidebar-item" data-step="6" onclick="goToStep(6)"><span class="step-num">6</span> Doctors &amp; Rx</div>
+    <div class="sidebar-item" data-step="7" onclick="goToStep(7)"><span class="step-num">7</span> Plan Review</div>
+    <div class="sidebar-item" data-step="8" onclick="goToStep(8)"><span class="step-num">8</span> Closing</div>
   </div>
 
   <div class="sidebar-section">
@@ -752,8 +778,8 @@ select option { background: var(--bg-card); }
 
   <div class="quick-jump">
     <div class="quick-jump-title">QUICK JUMP</div>
-    <a class="quick-link" onclick="goToStep(5)">📋 Current Coverage (Step 5)</a>
-    <a class="quick-link" onclick="goToStep(6)">🏷️ SEP Indicators (Step 6)</a>
+    <a class="quick-link" onclick="goToStep(4)">📋 Current Coverage (Step 4)</a>
+    <a class="quick-link" onclick="goToStep(5)">🏷️ SEP Indicators (Step 5)</a>
     <a class="quick-link" onclick="goToStep('disclosures')">📜 Required Disclosures</a>
     <a class="quick-link" onclick="goToStep('rebuttals')">⚡ Rebuttals</a>
   </div>
@@ -765,9 +791,9 @@ select option { background: var(--bg-card); }
 <!-- ═══════════════ STEP 1 ═══════════════ -->
 <section class="step-section active" id="step-1">
   <div class="step-header">
-    <div class="step-counter">Step 1 of 9</div>
-    <h1 class="step-title">Icebreaker &amp; Introduction</h1>
-    <p class="step-subtitle">Confirm who you're speaking with, disclose the recorded line, and get their ZIP and Date of Birth to pull them up in Sunfire.</p>
+    <div class="step-counter">Step 1 of 8</div>
+    <h1 class="step-title">Icebreaker, Eligibility &amp; Disclosure</h1>
+    <p class="step-subtitle">Introduce yourself, set the agenda, get ZIP and Date of Birth, confirm Parts A &amp; B and decision-maker, then read the required TPMO disclosure and get permission to proceed.</p>
   </div>
 
   <div class="agent-line">
@@ -786,11 +812,69 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, just so I can see all of the options available in your area can I please have your zip code and date of birth?</div></div>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="agent-bubble">
+      <div style="font-weight:700;margin-bottom:12px">[Provide 10 second elevator pitch on why you are here today]</div>
+      <div style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px">What to Cover:</div>
+      <ul style="margin:0 0 0 20px; padding:0; line-height:1.9">
+        <li><strong>Build the Need:</strong> As you may have seen in the news there have been a lot of changes to Medicare, some good, some not so good.</li>
+        <li><strong>Your Role:</strong> To review benefits and make sure they are set up for success in 2027</li>
+        <li><strong>Obtain Client Commitment:</strong> How does that sound?</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">To get started can I get your zip code and date of birth?</div></div>
 
   <div class="note-card"><span class="card-icon">📋</span> <strong>[Enter ZIP code in Sunfire]</strong> — pull their report while you continue the conversation.</div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Awesome, I actually just helped someone in your area so I know there are some great options! As you may know this benefit is tied to your Medicare plan, so let me go ahead and read through a quick government required disclosure and then I will walk you through the process, and that is:</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I actually just helped someone in your area so we should be able to help you out today.</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And just to confirm, are you currently enrolled in Medicare Parts A and B?</div></div>
+
+  <div style="display:flex;justify-content:center;margin:16px 0">
+    <div class="calc-radio-group" style="max-width:500px;width:100%">
+      <input type="radio" id="partsAbYes" name="partsAbCheck" value="yes" onchange="togglePartsAb()">
+      <label for="partsAbYes">Yes — Enrolled A &amp; B</label>
+      <input type="radio" id="partsAbNo" name="partsAbCheck" value="no" onchange="togglePartsAb()">
+      <label for="partsAbNo">No</label>
+    </div>
+  </div>
+
+  <div id="partsAbNoContent" style="display:none">
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>End Call:</strong> "Unfortunately I am only able to assist individuals with Medicare Parts A and B. I hope you have a great day."</div>
+  </div>
+
+  <div id="partsAbYesContent" style="display:none">
+    <div class="success-card"><span class="card-icon">✅</span> Eligible to continue — proceed to decision-maker check.</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you make all of your own healthcare decisions?</div></div>
+
+  <div style="display:flex;justify-content:center;margin:16px 0">
+    <div class="calc-radio-group" style="max-width:500px;width:100%">
+      <input type="radio" id="decisionYes" name="decisionCheck" value="yes" onchange="toggleDecisionMaker()">
+      <label for="decisionYes">Yes</label>
+      <input type="radio" id="decisionNo" name="decisionCheck" value="no" onchange="toggleDecisionMaker()">
+      <label for="decisionNo">No</label>
+    </div>
+  </div>
+
+  <div id="decisionYesContent" style="display:none">
+    <div class="note-card"><span class="card-icon">💡</span> <strong>If client says yes but someone helps them:</strong> "If I am able to find you the benefits you called in about today, does that person need to be present or can you make your own decision?"</div>
+  </div>
+
+  <div id="decisionNoContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Is that individual available to join today's call?</div></div>
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>If not available — End Call.</strong> We are not able to continue without the decision-maker present.</div>
+  </div>
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, you are eligible to continue with our review today. Before we hop in I just have to read a quick government required disclosure and that is to let you know that:</div></div>
 
   <div class="agent-line">
     <span class="agent-label">Agent</span>
@@ -804,13 +888,13 @@ select option { background: var(--bg-card); }
   <div class="confirm-wrap">
     <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
     <div class="confirm-toggle">
-      <input type="radio" id="step1ConfirmYes" name="step1Confirm" value="yes" onchange="updateConfirmState('step1ConfirmResult', true)">
-      <label for="step1ConfirmYes">✓ Yes</label>
-      <input type="radio" id="step1ConfirmNo" name="step1Confirm" value="no" onchange="updateConfirmState('step1ConfirmResult', false)" checked>
-      <label for="step1ConfirmNo">Not Yet</label>
+      <input type="radio" id="tpmoConfirmYes" name="tpmoConfirm" value="yes" onchange="updateConfirmState('tpmoConfirmResult', true)">
+      <label for="tpmoConfirmYes">✓ Yes</label>
+      <input type="radio" id="tpmoConfirmNo" name="tpmoConfirm" value="no" onchange="updateConfirmState('tpmoConfirmResult', false)" checked>
+      <label for="tpmoConfirmNo">Not Yet</label>
     </div>
   </div>
-  <div id="step1ConfirmResult"></div>
+  <div id="tpmoConfirmResult"></div>
 
   <div class="tip-card"><span class="card-icon">💡</span> Keep the tone warm and unrushed — this is the client's first impression of the call.</div>
 
@@ -844,112 +928,54 @@ select option { background: var(--bg-card); }
   </div>
 </section>
 
-<!-- ═══════════════ STEP 2 ═══════════════ -->
+<!-- ═══════════════ STEP 2 — VERIFY CLIENT ═══════════════ -->
 <section class="step-section" id="step-2">
   <div class="step-header">
-    <div class="step-counter">Step 2 of 9</div>
-    <h1 class="step-title">Eligibility, Decision-Maker &amp; Other Coverage</h1>
-    <p class="step-subtitle">Confirm Medicare Parts A &amp; B, confirm who makes healthcare decisions, then screen for other health coverage.</p>
+    <div class="step-counter">Step 2 of 8</div>
+    <h1 class="step-title">Verify Client in the Medicare System</h1>
+    <p class="step-subtitle">Get permission to look them up, then verify date of birth and mailing address once their profile loads.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Thank you, as you are probably aware there have been a lot of changes to Medicare this year. My role here today is to review your benefits to see if you are receiving everything you are entitled to, which can often result in us getting you some extra money back on a spending card or additional benefits. How does that sound?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now let me get you all verified in the Medicare system. Do you have your Red, White, and Blue Medicare card handy or are you able to grab that for me?</div></div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, so let's go ahead and start by confirming your eligibility:</div></div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Are you currently enrolled in Medicare Parts A &amp; B?</div></div>
-
-  <div style="display:flex;justify-content:center;margin:16px 0">
-    <div class="calc-radio-group" style="max-width:500px;width:100%">
-      <input type="radio" id="partsAbYes" name="partsAbCheck" value="yes" onchange="togglePartsAb()">
-      <label for="partsAbYes">Yes — Enrolled A &amp; B</label>
-      <input type="radio" id="partsAbNo" name="partsAbCheck" value="no" onchange="togglePartsAb()">
-      <label for="partsAbNo">No</label>
+  <div class="agent-line">
+    <span class="agent-label">Agent</span>
+    <div class="disclosure-card">
+      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
+      <div class="disclosure-card-body">Thank you, and do I have your permission to look you up in the Medicare system?</div>
     </div>
   </div>
-
-  <div id="partsAbNoContent" style="display:none">
-    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>End Call:</strong> "Unfortunately I am only able to assist individuals with Medicare Parts A and B. I hope you have a great day."</div>
+  <div class="confirm-wrap">
+    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
+    <div class="confirm-toggle">
+      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState('lookupConfirmResult', true)">
+      <label for="lookupConfirmYes">✓ Yes</label>
+      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState('lookupConfirmResult', false)" checked>
+      <label for="lookupConfirmNo">Not Yet</label>
+    </div>
   </div>
+  <div id="lookupConfirmResult"></div>
 
-  <div id="partsAbYesContent" style="display:none">
-    <div class="success-card"><span class="card-icon">✅</span> Eligible to continue — proceed to decision-maker check.</div>
-  </div>
+  <div class="tip-card"><span class="card-icon">💡</span> <strong>While the report loads</strong> — build rapport. Ask about their day, how long they've had Medicare, family. "Are you originally from [STATE] or did you move there?" "Are you still working or fully retired?" Keep them talking and comfortable — this also buys time for the report to load.</div>
 
   <hr class="section-divider">
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And &lt;Client Name&gt;, do you make your own health care decisions?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect Mr./Ms. [Last Name], I do have your Medicare eligibility verified. For security and accuracy purposes, I'd just like to quickly confirm the information I'm seeing on the account.</div></div>
 
-  <div style="display:flex;justify-content:center;margin:16px 0">
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I show your full name as <strong>[Full Name]</strong>, date of birth <strong>[DOB]</strong>, and mailing address as <strong>[Address]</strong>. Is all of that correct?</div></div>
+  <div style="display:flex;justify-content:center;margin:12px 0 16px">
     <div class="calc-radio-group" style="max-width:500px;width:100%">
-      <input type="radio" id="decisionYes" name="decisionCheck" value="yes" onchange="toggleDecisionMaker()">
-      <label for="decisionYes">Yes</label>
-      <input type="radio" id="decisionNo" name="decisionCheck" value="no" onchange="toggleDecisionMaker()">
-      <label for="decisionNo">No</label>
+      <input type="radio" id="addressMatchYes" name="addressMatch" value="yes" onchange="toggleMov()" checked>
+      <label for="addressMatchYes">Matches</label>
+      <input type="radio" id="addressMatchNo" name="addressMatch" value="no" onchange="toggleMov()">
+      <label for="addressMatchNo">Different Address</label>
     </div>
   </div>
-
-  <div id="decisionYesContent" style="display:none">
-    <div class="note-card"><span class="card-icon">💡</span> <strong>If client says yes but someone helps them:</strong> "If I am able to find you the benefits you called in about today, does that person need to be present or can you make your own decision?"</div>
+  <div id="addressMatchesContent"><div class="success-card"><span class="card-icon">✅</span> "Perfect, thank you for confirming."</div></div>
+  <div id="movContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and is that address your new primary residence? We will definitely want to see what opportunities are available for you at your new residence.</div></div>
+    <div class="target-card"><span class="card-icon">🏷️</span> <strong>SEP Indicator — MOV (Moved).</strong> This flags a Special Enrollment Period based on a change of address. Carry this flag into Step 5.</div>
   </div>
-
-  <div id="decisionNoContent" style="display:none">
-    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Is that individual available to join today's call?</div></div>
-    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>If not available — End Call.</strong> We are not able to continue without the decision-maker present.</div>
-  </div>
-
-  <hr class="section-divider">
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok, and in addition to Medicare, do you have any other health coverage currently, such as VA Benefits, Tricare for Life, ChampVA, PACE, or Employer or Retirement Benefits that provide healthcare coverage?</div></div>
-
-  <div class="form-group">
-    <label class="form-label">Other Coverage Type</label>
-    <select id="otherCoverageSelect" onchange="handleOtherCoverage()">
-      <option value="">— Select response —</option>
-      <option value="none">No Additional Health Coverage → Proceed</option>
-      <option value="va">VA Benefits</option>
-      <option value="tricare">Tricare for Life / ChampVA</option>
-      <option value="other">Other (Retirement Benefits, Gov't Employee BCBS, PACE, etc.)</option>
-    </select>
-  </div>
-
-  <div id="coverageNoneContent" style="display:none">
-    <div class="success-card"><span class="card-icon">✅</span> No additional coverage — proceed with the conversation.</div>
-  </div>
-
-  <div id="coverageVaContent" style="display:none">
-    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you go to the VA for all of your doctors or do you see civilian doctors?</div></div>
-    <div style="display:flex;justify-content:center;margin:12px 0 16px">
-      <div class="calc-radio-group" style="max-width:500px;width:100%">
-        <input type="radio" id="vaDoctorsCivilian" name="vaDoctors" value="civilian" onchange="handleVaDoctors()">
-        <label for="vaDoctorsCivilian">Civilian Doctors</label>
-        <input type="radio" id="vaDoctorsVaOnly" name="vaDoctors" value="vaonly" onchange="handleVaDoctors()">
-        <label for="vaDoctorsVaOnly">Only the VA</label>
-      </div>
-    </div>
-    <div id="vaDoctorsCivilianNote" style="display:none" class="note-card"><span class="card-icon">📋</span> Doctors must be in network — confirm this when reviewing providers in Sunfire.</div>
-    <div id="vaDoctorsVaOnlyNote" style="display:none" class="note-card"><span class="card-icon">📋</span> Confirm this when inputting doctors/specialists — since they only see VA doctors, we can use any carrier and will select a PCP for purposes of the application.</div>
-
-    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you get all of your prescriptions filled through the VA?</div></div>
-    <div style="display:flex;justify-content:center;margin:12px 0 16px">
-      <div class="calc-radio-group" style="max-width:500px;width:100%">
-        <input type="radio" id="vaRxYes" name="vaRx" value="yes" onchange="handleVaRx()">
-        <label for="vaRxYes">Yes — VA Only</label>
-        <input type="radio" id="vaRxNo" name="vaRx" value="no" onchange="handleVaRx()">
-        <label for="vaRxNo">No — Fills Outside VA</label>
-      </div>
-    </div>
-    <div id="vaRxResult"></div>
-  </div>
-
-  <div id="coverageTricareContent" style="display:none">
-    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>Tricare / ChampVA — Manager Required.</strong> Loop in a manager before proceeding with this client.</div>
-  </div>
-
-  <div id="coverageOtherContent" style="display:none">
-    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>End Call.</strong> Retirement benefits, Government Employee BCBS, PACE, and similar other coverage make this client ineligible for this conversation. Thank them for their time and end the call politely.</div>
-  </div>
-
-  <div id="coverageRouteResult" style="margin-top:12px"></div>
 
   <div class="step-nav">
     <button class="nav-btn" onclick="goToStep(1)">← Back</button>
@@ -957,15 +983,15 @@ select option { background: var(--bg-card); }
   </div>
 </section>
 
-<!-- ═══════════════ STEP 4 ═══════════════ -->
+<!-- ═══════════════ STEP 3 — SCOPE & TPMO ═══════════════ -->
 <section class="step-section" id="step-3">
   <div class="step-header">
-    <div class="step-counter">Step 3 of 9</div>
-    <h1 class="step-title">Scope of Conversation &amp; FMO Disclosure</h1>
+    <div class="step-counter">Step 3 of 8</div>
+    <h1 class="step-title">Scope of Appointment</h1>
     <p class="step-subtitle">Read the required Medicare disclosures, list what Blueprint Health offers, and get verbal permission to proceed.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, you are eligible to continue with our conversation today. And before we review the options available to you in your area, I do just have to read one more required disclosure, and that is just to let you know:</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, and I have your plan all pulled up here and I do see some interesting changes going into 2027, so let me run through this last government required disclosure and that is just to let you know:</div></div>
 
   <div class="agent-line">
     <span class="agent-label">Agent</span>
@@ -1003,70 +1029,15 @@ select option { background: var(--bg-card); }
   </div>
 </section>
 
-<!-- ═══════════════ STEP 4 ═══════════════ -->
+<!-- ═══════════════ STEP 4 — CURRENT COVERAGE ═══════════════ -->
 <section class="step-section" id="step-4">
   <div class="step-header">
-    <div class="step-counter">Step 4 of 9</div>
-    <h1 class="step-title">Verify Client in the Medicare System</h1>
-    <p class="step-subtitle">Get permission to look them up, then verify date of birth and mailing address once their profile loads.</p>
-  </div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Okay so next we will check your eligibility through your Medicare Parts A and B to see what benefits you qualify for. Could you grab your Red, White, and Blue Medicare card and read me the numbers and letters across the middle exactly as they appear?</div></div>
-
-  <div class="agent-line">
-    <span class="agent-label">Agent</span>
-    <div class="disclosure-card">
-      <div class="disclosure-card-header">📜 Required — Read Verbatim</div>
-      <div class="disclosure-card-body">Perfect, and just to confirm, do I have your permission to look you up in the Medicare system to confirm your eligibility?</div>
-    </div>
-  </div>
-  <div class="confirm-wrap">
-    <span style="font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.05em">Verbal Confirmation Obtained:</span>
-    <div class="confirm-toggle">
-      <input type="radio" id="lookupConfirmYes" name="lookupConfirm" value="yes" onchange="updateConfirmState('lookupConfirmResult', true)">
-      <label for="lookupConfirmYes">✓ Yes</label>
-      <input type="radio" id="lookupConfirmNo" name="lookupConfirm" value="no" onchange="updateConfirmState('lookupConfirmResult', false)" checked>
-      <label for="lookupConfirmNo">Not Yet</label>
-    </div>
-  </div>
-  <div id="lookupConfirmResult"></div>
-
-  <div class="tip-card"><span class="card-icon">💡</span> <strong>While the report loads</strong> — build rapport. Ask about their day, how long they've had Medicare, family. "Are you originally from [STATE] or did you move there?" "Are you still working or fully retired?" Keep them talking and comfortable — this also buys time for the report to load.</div>
-
-  <hr class="section-divider">
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect Mr./Ms. [Last Name], I do have your Medicare eligibility verified. For security and accuracy purposes, I'd just like to quickly confirm the information I'm seeing on the account.</div></div>
-
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I show your full name as <strong>[Full Name]</strong>, date of birth <strong>[DOB]</strong>, and mailing address as <strong>[Address]</strong>. Is all of that correct?</div></div>
-  <div style="display:flex;justify-content:center;margin:12px 0 16px">
-    <div class="calc-radio-group" style="max-width:500px;width:100%">
-      <input type="radio" id="addressMatchYes" name="addressMatch" value="yes" onchange="toggleMov()" checked>
-      <label for="addressMatchYes">Matches</label>
-      <input type="radio" id="addressMatchNo" name="addressMatch" value="no" onchange="toggleMov()">
-      <label for="addressMatchNo">Different Address</label>
-    </div>
-  </div>
-  <div id="addressMatchesContent"><div class="success-card"><span class="card-icon">✅</span> "Perfect, thank you for confirming."</div></div>
-  <div id="movContent" style="display:none">
-    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and is that address your new primary residence? We will definitely want to see what opportunities are available for you at your new residence.</div></div>
-    <div class="target-card"><span class="card-icon">🏷️</span> <strong>SEP Indicator — MOV (Moved).</strong> This flags a Special Enrollment Period based on a change of address. Carry this flag into Step 6.</div>
-  </div>
-
-  <div class="step-nav">
-    <button class="nav-btn" onclick="goToStep(3)">← Back</button>
-    <button class="nav-btn primary" onclick="goToStep(5)">Next →</button>
-  </div>
-</section>
-
-<!-- ═══════════════ STEP 5 ═══════════════ -->
-<section class="step-section" id="step-5">
-  <div class="step-header">
-    <div class="step-counter">Step 5 of 9</div>
+    <div class="step-counter">Step 4 of 8</div>
     <h1 class="step-title">Current Coverage Review &amp; Needs Analysis</h1>
     <p class="step-subtitle">Confirm what's on file, then dig into their current coverage — including a quick Original Medicare vs. Medicare Advantage explainer if needed.</p>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect and just to confirm</div></div>
+  <div class="note-card"><span class="card-icon">📋</span> <strong>Select the option that appears in Sunfire.</strong></div>
 
   <div class="route-selector">
     <div class="route-card" onclick="selectPlanStatus('medicare', this)"><div class="route-icon">💳</div><div class="route-name">Medicare Plan Appears</div><div class="route-desc">Current MA plan on file</div></div>
@@ -1116,17 +1087,26 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
+  <div class="note-card" style="display:block">
+    <div style="font-weight:700;margin-bottom:6px"><span class="card-icon">📋</span> <strong>The following sections are up next - Cater what you present next to the client's energy and momentum of the call</strong></div>
+    <ul style="margin:0 0 0 24px; padding:0; line-height:1.9">
+      <li>NEEDS Analysis</li>
+      <li>DOCTOR / RX Review</li>
+      <li>Plan Review</li>
+    </ul>
+  </div>
+
   <div class="step-nav">
-    <button class="nav-btn" onclick="goToStep(4)">← Back</button>
-    <button class="nav-btn primary" onclick="goToStep(6)">Next →</button>
+    <button class="nav-btn" onclick="goToStep(3)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(5)">Next →</button>
   </div>
 </section>
 
-<!-- ═══════════════ STEP 6 ═══════════════ -->
-<section class="step-section" id="step-6">
+<!-- ═══════════════ STEP 5 — SEP INDICATORS ═══════════════ -->
+<section class="step-section" id="step-5">
   <div class="step-header">
-    <div class="step-counter">Step 6 of 9</div>
-    <h1 class="step-title">Additional Questions &amp; SEP Indicators</h1>
+    <div class="step-counter">Step 5 of 8</div>
+    <h1 class="step-title">NEEDS Analysis</h1>
     <p class="step-subtitle">These help surface every opportunity the client may be eligible for — and flag which Special Enrollment Period applies.</p>
   </div>
 
@@ -1163,15 +1143,15 @@ select option { background: var(--bg-card); }
   <div id="sepSummary"><span style="font-size:13px;color:var(--text-muted)">No SEP indicators flagged yet — check any that apply above.</span></div>
 
   <div class="step-nav">
-    <button class="nav-btn" onclick="goToStep(5)">← Back</button>
-    <button class="nav-btn primary" onclick="goToStep(7)">Next →</button>
+    <button class="nav-btn" onclick="goToStep(4)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(6)">Next →</button>
   </div>
 </section>
 
-<!-- ═══════════════ STEP 7 ═══════════════ -->
-<section class="step-section" id="step-7">
+<!-- ═══════════════ STEP 6 — DOCTORS & RX ═══════════════ -->
+<section class="step-section" id="step-6">
   <div class="step-header">
-    <div class="step-counter">Step 7 of 9</div>
+    <div class="step-counter">Step 6 of 8</div>
     <h1 class="step-title">Review Doctors &amp; Prescriptions</h1>
     <p class="step-subtitle">Confirm doctors and prescriptions are up to date in the system.</p>
   </div>
@@ -1226,19 +1206,17 @@ select option { background: var(--bg-card); }
     <div class="note-card"><span class="card-icon">📋</span> Go through RX Name, Dosage, and Refill Frequency for every prescription.</div>
   </div>
 
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">[as applicable] And are there any medications that are especially expensive for you right now or that you have had concerns about regarding coverage or copays?</div></div>
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, I know prescription costs are important to people so we will definitely look at those closely today.</div></div>
 
   <div class="step-nav">
-    <button class="nav-btn" onclick="goToStep(6)">← Back</button>
-    <button class="nav-btn primary" onclick="goToStep(8)">Next → Plan Review</button>
+    <button class="nav-btn" onclick="goToStep(5)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(7)">Next → Plan Review</button>
   </div>
 </section>
 
-<!-- ═══════════════ STEP 8 ═══════════════ -->
-<section class="step-section" id="step-8">
+<!-- ═══════════════ STEP 7 — PLAN REVIEW ═══════════════ -->
+<section class="step-section" id="step-7">
   <div class="step-header">
-    <div class="step-counter">Step 8 of 9</div>
+    <div class="step-counter">Step 7 of 8</div>
     <h1 class="step-title">Plan Review &amp; Discussion</h1>
     <p class="step-subtitle">Now simply have a conversation with the beneficiary. These steps are crucial for doing our job properly and finding the most beneficial option for the client. Remember — it is our job to educate and be professional; the client is relying on us to help them.</p>
   </div>
@@ -1342,15 +1320,15 @@ select option { background: var(--bg-card); }
   </div>
 
   <div class="step-nav">
-    <button class="nav-btn" onclick="goToStep(7)">← Back</button>
-    <button class="nav-btn primary" onclick="goToStep(9)">Next → Closing</button>
+    <button class="nav-btn" onclick="goToStep(6)">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep(8)">Next → Closing</button>
   </div>
 </section>
 
-<!-- ═══════════════ STEP 9 ═══════════════ -->
-<section class="step-section" id="step-9">
+<!-- ═══════════════ STEP 8 — CLOSING ═══════════════ -->
+<section class="step-section" id="step-8">
   <div class="step-header">
-    <div class="step-counter">Step 9 of 9</div>
+    <div class="step-counter">Step 8 of 8</div>
     <h1 class="step-title">Closing &amp; Follow-Up</h1>
     <p class="step-subtitle">Lock in trust, set the follow-up expectation, and ask for referrals.</p>
   </div>
@@ -1372,7 +1350,7 @@ select option { background: var(--bg-card); }
   <div class="call-complete"><div class="check">✅</div><h3>Call Complete</h3></div>
 
   <div class="step-nav">
-    <button class="nav-btn" onclick="goToStep(8)">← Back</button>
+    <button class="nav-btn" onclick="goToStep(7)">← Back</button>
     <button class="nav-btn primary" onclick="resetCall()">↺ New Call</button>
   </div>
 </section>
@@ -1390,11 +1368,11 @@ select option { background: var(--bg-card); }
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
       <div class="disclosure-card-header">📜 Read Verbatim</div>
-      <div class="disclosure-card-body">And [Name], I just want to let you know that all of my calls are recorded for quality and training purposes, and if we get disconnected can I call you back at this number, it looks like it is (###-###-####).</div>
+      <div class="disclosure-card-body">Hi [Name], I hope you are doing well today. I just want to let you know that all of my calls are recorded for quality and training purposes, and if we get disconnected can I call you back at this number? Perfect, it looks like it is (###-###-####), is that correct?</div>
     </div>
   </div>
 
-  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">2. FMO / SCOPE DISCLOSURE — Step 1</div>
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">2. TPMO DISCLOSURE — Step 1</div>
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
@@ -1402,6 +1380,7 @@ select option { background: var(--bg-card); }
       <div class="disclosure-card-body">We do not offer every plan available in your area. Currently we represent [#] Organizations which offer [#] Products in your area. Please contact Medicare.gov, 1-800-MEDICARE, or your local State Health Insurance Program (SHIP) to get information on all of your options.</div>
     </div>
   </div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation?</div></div>
 
   <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">3. PRODUCTS OFFERED &amp; NO EFFECT ON COVERAGE — Step 3</div>
   <div class="agent-line">
@@ -1421,8 +1400,9 @@ select option { background: var(--bg-card); }
       </div>
     </div>
   </div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do I have your permission to proceed with our conversation and discuss these options with you?</div></div>
 
-  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">4. ENROLLMENT CODE — Step 9</div>
+  <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin:20px 0 8px">4. ENROLLMENT CODE — Step 8</div>
   <div class="agent-line">
     <span class="agent-label">Agent</span>
     <div class="disclosure-card">
@@ -1431,7 +1411,7 @@ select option { background: var(--bg-card); }
     </div>
   </div>
 
-  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> — once after the required disclosure in Step 3. Also confirm permission to look the client up in the Medicare system to confirm eligibility (Step 4).</div>
+  <div class="warning-card" style="margin-top:12px"><span class="card-icon">⚠️</span> <strong>Agent must obtain verbal confirmation</strong> — after the TPMO disclosure (Step 1), permission to look the client up in the Medicare system (Step 2), and after the products-offered disclosure (Step 3).</div>
 </section>
 
 <!-- ═══════════════ REFERENCE — REBUTTALS ═══════════════ -->
@@ -1513,19 +1493,15 @@ function resetCall() {
   document.querySelectorAll('select').forEach(s => s.value = '');
   document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
   document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-  document.getElementById('step1ConfirmNo').checked = true;
+  document.getElementById('tpmoConfirmNo').checked = true;
   document.getElementById('scopeConfirmNo').checked = true;
   document.getElementById('lookupConfirmNo').checked = true;
   document.getElementById('addressMatchYes').checked = true;
 
-  ['vaRxResult','coverageRouteResult','sepSummary','sepSummary2','step1ConfirmResult','scopeConfirmResult','lookupConfirmResult'].forEach(id => {
+  ['sepSummary','sepSummary2','tpmoConfirmResult','scopeConfirmResult','lookupConfirmResult'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.innerHTML = '';
   });
-  document.getElementById('coverageNoneContent').style.display = 'none';
-  document.getElementById('coverageVaContent').style.display = 'none';
-  document.getElementById('coverageTricareContent').style.display = 'none';
-  document.getElementById('coverageOtherContent').style.display = 'none';
   document.getElementById('movContent').style.display = 'none';
   document.getElementById('addressMatchesContent').style.display = 'block';
   document.getElementById('decisionYesContent').style.display = 'none';
@@ -1550,6 +1526,7 @@ function resetCall() {
   document.getElementById('coverageChangeNote').style.display = 'none';
   updateDiscussProgress();
   updateSobProgress();
+  clearAgentChecks();
 
   goToStep(1);
 }
@@ -1557,7 +1534,7 @@ function resetCall() {
 function updateMobileNav() {
   const nav = document.getElementById('mobileNav');
   let html = '';
-  for (let i = 1; i <= 9; i++) {
+  for (let i = 1; i <= 8; i++) {
     html += `<button class="${i === currentStep ? 'active' : ''}" onclick="goToStep(${i})">${i}</button>`;
   }
   html += `<button onclick="goToStep('disclosures')">📜</button>`;
@@ -1576,35 +1553,6 @@ function togglePartsAb() {
   const yes = document.getElementById('partsAbYes').checked;
   document.getElementById('partsAbYesContent').style.display = yes ? 'block' : 'none';
   document.getElementById('partsAbNoContent').style.display = yes ? 'none' : 'block';
-}
-
-function handleOtherCoverage() {
-  const val = document.getElementById('otherCoverageSelect').value;
-  document.getElementById('coverageNoneContent').style.display = val === 'none' ? 'block' : 'none';
-  document.getElementById('coverageVaContent').style.display = val === 'va' ? 'block' : 'none';
-  document.getElementById('coverageTricareContent').style.display = val === 'tricare' ? 'block' : 'none';
-  document.getElementById('coverageOtherContent').style.display = val === 'other' ? 'block' : 'none';
-  document.getElementById('coverageRouteResult').innerHTML = '';
-}
-
-function handleVaDoctors() {
-  const civilian = document.getElementById('vaDoctorsCivilian').checked;
-  const vaOnly = document.getElementById('vaDoctorsVaOnly').checked;
-  document.getElementById('vaDoctorsCivilianNote').style.display = civilian ? 'block' : 'none';
-  document.getElementById('vaDoctorsVaOnlyNote').style.display = vaOnly ? 'block' : 'none';
-}
-
-function handleVaRx() {
-  const vaOnly = document.getElementById('vaRxYes').checked;
-  const result = document.getElementById('vaRxResult');
-  const routeResult = document.getElementById('coverageRouteResult');
-  if (vaOnly) {
-    result.innerHTML = '<div class="warning-card"><span class="card-icon">⚠️</span> Fills all prescriptions through the VA only.</div>';
-    routeResult.innerHTML = '<span class="state-badge orange">📋 Route: MA-Only (no drug coverage needed)</span>';
-  } else {
-    result.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> Fills prescriptions outside the VA.</div>';
-    routeResult.innerHTML = '<span class="state-badge green">📋 Route: MAPD (Medicare Advantage with Prescription Drug coverage)</span>';
-  }
 }
 
 // ═══ SHARED — VERBAL CONFIRMATION TOGGLE ═══
@@ -1709,7 +1657,39 @@ function updateSobProgress() {
   if (fill) fill.style.width = (total ? (checked / total * 100) : 0) + '%';
 }
 
+
+// ═══ AGENT "READ" CHECK BUTTONS ═══
+function initAgentChecks() {
+  document.querySelectorAll('.step-section[id^="step-"]').forEach(sec => {
+    if (!/^step-\d+$/.test(sec.id)) return;
+    sec.querySelectorAll('.agent-line').forEach(line => {
+      if (line.closest('.objection-body') || line.querySelector(':scope > .agent-check')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'agent-check';
+      btn.textContent = '✓';
+      btn.title = 'Mark as read';
+      btn.setAttribute('aria-label', 'Mark this line as read');
+      btn.setAttribute('aria-pressed', 'false');
+      btn.addEventListener('click', () => {
+        const on = line.classList.toggle('checked');
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        btn.title = on ? 'Mark as unread' : 'Mark as read';
+      });
+      line.appendChild(btn);
+    });
+  });
+}
+function clearAgentChecks() {
+  document.querySelectorAll('.agent-line.checked').forEach(l => {
+    l.classList.remove('checked');
+    const b = l.querySelector(':scope > .agent-check');
+    if (b) { b.setAttribute('aria-pressed', 'false'); b.title = 'Mark as read'; }
+  });
+}
+
 // ═══ INIT ═══
+initAgentChecks();
 updateMobileNav();
 </script>
 </body>
