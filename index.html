@@ -874,6 +874,60 @@ select option { background: var(--bg-card); }
 
   <hr class="section-divider">
 
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok, and in addition to Medicare, do you have any other health coverage currently, such as VA Benefits, Tricare for Life, ChampVA, PACE, or Employer or Retirement Benefits that provide healthcare coverage?</div></div>
+
+  <div class="form-group">
+    <label class="form-label">Other Coverage Type</label>
+    <select id="otherCoverageSelect" onchange="handleOtherCoverage()">
+      <option value="">— Select response —</option>
+      <option value="none">No Additional Health Coverage → Proceed</option>
+      <option value="va">VA Benefits</option>
+      <option value="tricare">Tricare for Life / ChampVA</option>
+      <option value="other">Other (Retirement Benefits, Gov't Employee BCBS, PACE, etc.)</option>
+    </select>
+  </div>
+
+  <div id="coverageNoneContent" style="display:none">
+    <div class="success-card"><span class="card-icon">✅</span> No additional coverage — proceed with the conversation.</div>
+  </div>
+
+  <div id="coverageVaContent" style="display:none">
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you go to the VA for all of your doctors or do you see civilian doctors?</div></div>
+    <div style="display:flex;justify-content:center;margin:12px 0 16px">
+      <div class="calc-radio-group" style="max-width:500px;width:100%">
+        <input type="radio" id="vaDoctorsCivilian" name="vaDoctors" value="civilian" onchange="handleVaDoctors()">
+        <label for="vaDoctorsCivilian">Civilian Doctors</label>
+        <input type="radio" id="vaDoctorsVaOnly" name="vaDoctors" value="vaonly" onchange="handleVaDoctors()">
+        <label for="vaDoctorsVaOnly">Only the VA</label>
+      </div>
+    </div>
+    <div id="vaDoctorsCivilianNote" style="display:none" class="note-card"><span class="card-icon">📋</span> Doctors must be in network — confirm this when reviewing providers in Sunfire.</div>
+    <div id="vaDoctorsVaOnlyNote" style="display:none" class="note-card"><span class="card-icon">📋</span> Confirm this when inputting doctors/specialists — since they only see VA doctors, we can use any carrier and will select a PCP for purposes of the application.</div>
+
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you get all of your prescriptions filled through the VA?</div></div>
+    <div style="display:flex;justify-content:center;margin:12px 0 16px">
+      <div class="calc-radio-group" style="max-width:500px;width:100%">
+        <input type="radio" id="vaRxYes" name="vaRx" value="yes" onchange="handleVaRx()">
+        <label for="vaRxYes">Yes — VA Only</label>
+        <input type="radio" id="vaRxNo" name="vaRx" value="no" onchange="handleVaRx()">
+        <label for="vaRxNo">No — Fills Outside VA</label>
+      </div>
+    </div>
+    <div id="vaRxResult"></div>
+  </div>
+
+  <div id="coverageTricareContent" style="display:none">
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>Tricare / ChampVA — Manager Required.</strong> Loop in a manager before proceeding with this client.</div>
+  </div>
+
+  <div id="coverageOtherContent" style="display:none">
+    <div class="warning-card"><span class="card-icon">⚠️</span> <strong>End Call.</strong> Retirement benefits, Government Employee BCBS, PACE, and similar other coverage make this client ineligible for this conversation. Thank them for their time and end the call politely.</div>
+  </div>
+
+  <div id="coverageRouteResult" style="margin-top:12px"></div>
+
+  <hr class="section-divider">
+
   <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, you are eligible to continue with our review today. Before we hop in I just have to read a quick government required disclosure and that is to let you know that:</div></div>
 
   <div class="agent-line">
@@ -1511,6 +1565,8 @@ function resetCall() {
   document.querySelectorAll('select').forEach(s => s.value = '');
   document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
   document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+  ['vaRxResult','coverageRouteResult'].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = ''; });
+  ['coverageNoneContent','coverageVaContent','coverageTricareContent','coverageOtherContent','vaDoctorsCivilianNote','vaDoctorsVaOnlyNote'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
   document.getElementById('tpmoConfirmNo').checked = true;
   document.getElementById('scopeConfirmNo').checked = true;
   document.getElementById('lookupConfirmNo').checked = true;
@@ -1571,6 +1627,35 @@ function togglePartsAb() {
   const yes = document.getElementById('partsAbYes').checked;
   document.getElementById('partsAbYesContent').style.display = yes ? 'block' : 'none';
   document.getElementById('partsAbNoContent').style.display = yes ? 'none' : 'block';
+}
+
+function handleOtherCoverage() {
+  const val = document.getElementById('otherCoverageSelect').value;
+  document.getElementById('coverageNoneContent').style.display = val === 'none' ? 'block' : 'none';
+  document.getElementById('coverageVaContent').style.display = val === 'va' ? 'block' : 'none';
+  document.getElementById('coverageTricareContent').style.display = val === 'tricare' ? 'block' : 'none';
+  document.getElementById('coverageOtherContent').style.display = val === 'other' ? 'block' : 'none';
+  document.getElementById('coverageRouteResult').innerHTML = '';
+}
+
+function handleVaDoctors() {
+  const civilian = document.getElementById('vaDoctorsCivilian').checked;
+  const vaOnly = document.getElementById('vaDoctorsVaOnly').checked;
+  document.getElementById('vaDoctorsCivilianNote').style.display = civilian ? 'block' : 'none';
+  document.getElementById('vaDoctorsVaOnlyNote').style.display = vaOnly ? 'block' : 'none';
+}
+
+function handleVaRx() {
+  const vaOnly = document.getElementById('vaRxYes').checked;
+  const result = document.getElementById('vaRxResult');
+  const routeResult = document.getElementById('coverageRouteResult');
+  if (vaOnly) {
+    result.innerHTML = '<div class="warning-card"><span class="card-icon">⚠️</span> Fills all prescriptions through the VA only.</div>';
+    routeResult.innerHTML = '<span class="state-badge orange">📋 Route: MA-Only (no drug coverage needed)</span>';
+  } else {
+    result.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> Fills prescriptions outside the VA.</div>';
+    routeResult.innerHTML = '<span class="state-badge green">📋 Route: MAPD (Medicare Advantage with Prescription Drug coverage)</span>';
+  }
 }
 
 // ═══ SHARED — VERBAL CONFIRMATION TOGGLE ═══
