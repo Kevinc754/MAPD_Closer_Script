@@ -317,6 +317,10 @@ body {
 .agent-line.checked .disclosure-card { opacity: 0.45; }
 
 
+.dotted-box { border: 2px dotted var(--accent); border-radius: var(--radius); padding: 10px 16px 6px; margin: 8px 0 12px; }
+.dotted-box .agent-line { margin: 10px 0 6px; }
+.link-inline { color: var(--accent); text-decoration: underline; cursor: pointer; font-weight: 600; }
+
 /* Tip / Note cards */
 .tip-card, .note-card, .warning-card, .success-card, .target-card, .disclosure-card {
   border-radius: var(--radius);
@@ -743,6 +747,254 @@ select option { background: var(--bg-card); }
   cursor: pointer;
 }
 .mobile-nav button.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* ═══ ANCILLARY PRODUCT SCRIPT (ported) ═══ */
+.plan-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+.plan-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.plan-card:hover, .plan-card.selected { border-color: var(--accent); box-shadow: 0 0 24px var(--accent-glow); }
+.plan-card .plan-name { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.plan-card .plan-amount { font-size: 24px; font-weight: 700; color: var(--text); }
+.plan-card .plan-daily { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+.plan-card .plan-rx-cap { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+.calc-section-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 24px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.calc-section-label .calc-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.calc-input-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.calc-input-group { display: flex; flex-direction: column; gap: 4px; }
+.calc-input-group label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.calc-input-group input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.calc-input-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.calc-input-group .calc-unit { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.calc-plan {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+.calc-plan:hover { border-color: var(--border-accent); }
+.calc-plan.selected { border-color: var(--accent); box-shadow: 0 0 24px var(--accent-glow); }
+.calc-plan-head {
+  padding: 16px 14px 14px;
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.calc-plan.selected .calc-plan-head { background: var(--accent-soft); }
+.calc-plan-title { font-size: 13px; font-weight: 700; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+.calc-plan-total { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.calc-plan-daily { font-size: 13px; color: var(--text-dim); }
+.calc-plan-rx-cap { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+.calc-plan-input-wrap {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(59,130,246,0.08);
+}
+.calc-plan-input-label { font-size: 10px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.calc-plan-input {
+  background: rgba(59,130,246,0.06);
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  outline: none;
+  width: 100%;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+.calc-plan-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+.calc-math { padding: 8px 14px 0; flex: 1; }
+.calc-math-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: color 0.15s;
+}
+.calc-math-toggle:hover { color: var(--accent); }
+.calc-math-details { display: none; }
+.calc-math-details.open { display: block; }
+.calc-effective-header {
+  background: var(--accent);
+  color: #fff;
+  text-align: center;
+  padding: 6px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.calc-math-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 13px;
+}
+.calc-math-row:not(:last-child) { border-bottom: 1px solid rgba(255,255,255,0.03); }
+.calc-math-label { color: var(--text-dim); }
+.calc-math-label span { font-size: 11px; color: var(--text-muted); }
+.calc-math-value { font-weight: 700; color: var(--text); }
+.calc-math-value.subtract { color: var(--green); }
+.calc-math-value.capped { font-size: 11px; color: var(--red); }
+.calc-math-divider { border: none; border-top: 2px dashed var(--border); margin: 2px 0; }
+.calc-plan-footer {
+  margin-top: auto;
+  background: linear-gradient(135deg, #0f1d3d, #162450);
+  padding: 16px 14px;
+  display: flex;
+  justify-content: space-around;
+  text-align: center;
+  border-top: 2px solid rgba(59,130,246,0.2);
+}
+.calc-plan.selected .calc-plan-footer {
+  background: linear-gradient(135deg, var(--accent), #2563eb);
+  border-top-color: transparent;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+}
+.calc-footer-stat { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.calc-footer-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 1px; }
+.calc-plan.selected .calc-footer-label { color: rgba(255,255,255,0.65); }
+.calc-footer-hint { font-size: 9px; color: var(--text-muted); margin-bottom: 4px; }
+.calc-plan.selected .calc-footer-hint { color: rgba(255,255,255,0.4); }
+.calc-footer-value { font-size: 22px; font-weight: 800; color: var(--accent); line-height: 1.1; }
+.calc-plan.selected .calc-footer-value { color: #FFFFFF; text-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+.calc-footer-value small { font-size: 11px; font-weight: 500; opacity: 0.6; }
+.calc-footer-divider { width: 1px; background: rgba(255,255,255,0.08); align-self: stretch; }
+.calc-plan.selected .calc-footer-divider { background: rgba(255,255,255,0.2); }
+.calc-select-wrap {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.calc-select-wrap:hover { background: var(--accent-soft); }
+.calc-select-radio { width: 16px; height: 16px; accent-color: var(--accent); cursor: pointer; margin: 0; }
+.calc-select-label { font-size: 12px; font-weight: 600; color: var(--text-dim); cursor: pointer; }
+.calc-plan.selected .calc-select-label { color: var(--accent); }
+.calc-script-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 16px;
+}
+.calc-script-placeholder {
+  text-align: center;
+  padding: 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-style: italic;
+}
+.calc-script-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+.calc-script-text .hl, .agent-bubble .hl {
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+.calc-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 10px 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.calc-copy-btn:hover { background: #2563eb; }
+.calc-copy-btn.copied { background: var(--green); }
+@media (max-width: 700px) { .calc-input-row { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { padding: 20px 16px 80px; }
+  .plan-grid { grid-template-columns: 1fr; }
+  .route-selector { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
@@ -780,6 +1032,7 @@ select option { background: var(--bg-card); }
     <div class="quick-jump-title">QUICK JUMP</div>
     <a class="quick-link" onclick="goToStep(4)">📋 Current Coverage (Step 4)</a>
     <a class="quick-link" onclick="goToStep(5)">🏷️ SEP Indicators (Step 5)</a>
+    <a class="quick-link" onclick="goToStep('ancillary')">🏠 Ancillary Product Script</a>
     <a class="quick-link" onclick="goToStep('disclosures')">📜 Required Disclosures</a>
     <a class="quick-link" onclick="goToStep('rebuttals')">⚡ Rebuttals</a>
   </div>
@@ -1239,6 +1492,7 @@ select option { background: var(--bg-card); }
   <hr class="section-divider">
 
   <div style="font-size:13px;font-weight:700;color:var(--text-dim);margin-bottom:12px">💊 PRESCRIPTIONS</div>
+  <div class="note-card" style="margin-bottom:14px"><span class="card-icon">📋</span> Note: 4+ prescriptions, talk with the client about home healthcare options after the call.</div>
 
   <div class="route-selector">
     <div class="route-card" onclick="selectRxStatus('listed', this)"><div class="route-icon">📋</div><div class="route-name">Prescriptions Listed</div><div class="route-desc">Already on file</div></div>
@@ -1304,6 +1558,8 @@ select option { background: var(--bg-card); }
 
   <hr class="section-divider">
 
+  <div class="tip-card"><span class="card-icon">💡</span> <strong>If client is not interested or if there is no plan option,</strong> proceed to pitch ancillary product (<a class="link-inline" onclick="goToStep('ancillary')">Ancillary Product Script</a>).</div>
+
   <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">[Review other plan options, find knock out benefits and make the comparison]</div></div>
 
   <div class="agent-line">
@@ -1342,8 +1598,11 @@ select option { background: var(--bg-card); }
 
     <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin:16px 0 6px">Medical Benefits</div>
     <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Medical Deductible (including applicable services)</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Inpatient Hospital Coverage</span></label>
-    <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Outpatient Hospital Coverage</span></label>
+    <div class="dotted-box">
+      <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Inpatient Hospital Coverage</span></label>
+      <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Outpatient Hospital Coverage</span></label>
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Who is your hospital coverage through? After we get you setup I will talk with you about how to protect yourself from these copays.</div></div>
+    </div>
     <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Primary Care Doctor</span></label>
     <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Specialty Doctor</span></label>
     <label class="check-row"><input type="checkbox" onchange="updateSobProgress()"><span>Inpatient Mental Health Coverage</span></label>
@@ -1396,8 +1655,17 @@ select option { background: var(--bg-card); }
   </div>
 
   <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now I am going to text you both my office phone number and cell phone number. Let's go ahead and save that as a contact in your phone. I will be following up with you on Monday to see if you have any questions.</div></div>
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Please feel free to reach out to me with any questions — I am your licensed agent, and please feel free to use me as a resource.</div></div>
-  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">You are now all set with your Medicare plan — you made an excellent decision today. Please feel free to give your friends and family my phone number if they could benefit from a similar review.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Please feel free to reach out to me with any questions and give your friends / family my phone number if you think they could benefit from a similar review. I am now your licensed agent so please call to me as a resource with any questions.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">You are now all set with your Medicare plan — you made an excellent decision today and your Medicare enrollment is complete. I want to talk with you about how we can protect you some from those copays we just reviewed.</div></div>
+  <div style="display:flex;justify-content:center;margin:12px 0 8px">
+    <div class="calc-radio-group" style="max-width:500px;width:100%">
+      <input type="radio" id="closeIntYes" name="closeInterest" value="yes" onchange="closeInterestChange()">
+      <label for="closeIntYes">Client Interested – Yes</label>
+      <input type="radio" id="closeIntNo" name="closeInterest" value="no" onchange="closeInterestChange()">
+      <label for="closeIntNo">Client Interested – No</label>
+    </div>
+  </div>
+  <div id="closeInterestResult"></div>
 
   <div class="tip-card"><span class="card-icon">💡</span> Send your number now — texting it while you're still on the call builds trust and gives them an easy way to reach you later.</div>
 
@@ -1405,6 +1673,472 @@ select option { background: var(--bg-card); }
 
   <div class="step-nav">
     <button class="nav-btn" onclick="goToStep(7)">← Back</button>
+    <button class="nav-btn primary" onclick="resetCall()">↺ New Call</button>
+  </div>
+</section>
+
+
+<!-- ═══════════════ ANCILLARY PRODUCT SCRIPT ═══════════════ -->
+<section class="step-section" id="step-ancillary">
+  <div class="step-header">
+    <div class="step-counter">🏠 Ancillary Product Script</div>
+    <h1 class="step-title">Qualify the Client</h1>
+    <p class="step-subtitle">Answers from your discussion flag the right carrier path — ManhattanLife Home Healthcare or American Home Life Hospital Indemnity.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Agent complete these questions based on your discussion with the client</div></div>
+
+  <div class="form-group">
+    <label class="form-label">📍 Client's State</label>
+    <select id="ancStateSelect" onchange="ancUpdateState()">
+      <option value="">— Select state —</option>
+      <option value="AL">Alabama</option><option value="AZ">Arizona</option><option value="AR">Arkansas</option><option value="CO">Colorado</option><option value="DE">Delaware</option><option value="FL">Florida</option><option value="GA">Georgia</option><option value="ID">Idaho</option><option value="IL">Illinois</option><option value="IN">Indiana</option><option value="IA">Iowa</option><option value="KS">Kansas</option><option value="KY">Kentucky</option><option value="LA">Louisiana</option><option value="MD">Maryland</option><option value="MI">Michigan</option><option value="MN">Minnesota</option><option value="MS">Mississippi</option><option value="MO">Missouri</option><option value="MT">Montana</option><option value="NE">Nebraska</option><option value="NV">Nevada</option><option value="NM">New Mexico</option><option value="NC">North Carolina</option><option value="ND">North Dakota</option><option value="OH">Ohio</option><option value="OK">Oklahoma</option><option value="OR">Oregon</option><option value="PA">Pennsylvania</option><option value="SC">South Carolina</option><option value="SD">South Dakota</option><option value="TN">Tennessee</option><option value="TX">Texas</option><option value="UT">Utah</option><option value="VA">Virginia</option><option value="WV">West Virginia</option><option value="WI">Wisconsin</option><option value="WY">Wyoming</option>
+    </select>
+  </div>
+  <div id="ancStateInfo" style="margin-bottom:16px"></div>
+
+  <div class="form-group">
+    <label class="form-label">🎂 Client Date of Birth</label>
+    <input type="date" id="ancDob" onchange="ancUpdateAge()">
+  </div>
+  <div id="ancAgeInfo" style="margin-bottom:16px"></div>
+
+  <hr class="section-divider">
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0 8px">
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkAncMedicaid" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--accent)"><span style="font-size:14px;color:var(--text)">Client has SLMB+, QMB+, FBDE Medicaid.</span></label>
+  </div>
+  <div id="ancMedicaidResult" style="margin-bottom:8px"></div>
+
+  <div style="display:flex;flex-direction:column;gap:8px;margin:8px 0 8px">
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkAncMeds" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--accent)"><span style="font-size:14px;color:var(--text)">Client is taking 4+ prescriptions.</span></label>
+  </div>
+  <div id="ancMedsResult" style="margin-bottom:8px"></div>
+
+  <hr class="section-divider">
+
+  <div style="font-size:14px;font-weight:700;color:var(--text);margin:16px 0 12px">Health Conditions</div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px" id="ancHealthChecks">
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkCOPD" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--accent)"><span style="font-size:14px;color:var(--text)">COPD</span></label>
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkDiabetes" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--accent)"><span style="font-size:14px;color:var(--text)">Diabetes</span></label>
+    <div id="insulinCheck" style="display:none;margin-left:36px">
+      <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Are you taking insulin for that diabetes?</div></div>
+      <div class="calc-radio-group" style="max-width:220px;margin:8px 0">
+        <input type="radio" id="insulinYes" name="insulinCheck" value="yes" onchange="ancUpdateFlags()">
+        <label for="insulinYes">Yes Insulin</label>
+        <input type="radio" id="insulinNo" name="insulinCheck" value="no" onchange="ancUpdateFlags()">
+        <label for="insulinNo">No Insulin</label>
+      </div>
+    </div>
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkCancer" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--accent)"><span style="font-size:14px;color:var(--text)">Cancer</span></label>
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkHeart" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--accent)"><span style="font-size:14px;color:var(--text)">Heart Problems</span></label>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:4px 0">
+
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkNursing" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--red)"><span style="font-size:14px;color:var(--text)">Currently living in a nursing home or assisted living facility</span></label>
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkReceivingHHC" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--red)"><span style="font-size:14px;color:var(--text)">Currently receiving home healthcare or similar-type benefits</span></label>
+    <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border:1px solid rgba(239,68,68,0.2);border-radius:var(--radius-sm);cursor:pointer"><input type="checkbox" id="chkADL" onchange="ancUpdateFlags()" style="width:18px;height:18px;accent-color:var(--red)"><span style="font-size:14px;color:var(--text)">Unable to perform routine daily living activities (bathing, dressing, eating, toileting, transferring)</span></label>
+  </div>
+  <div id="healthFlagResult" style="margin-bottom:16px"></div>
+
+  <hr class="section-divider">
+
+  <div style="font-size:14px;color:var(--text-dim);margin-bottom:12px">🔀 <strong>Select the carrier that fits this client. Both options work for a client taking 4+ prescriptions.</strong></div>
+  <div id="ancRouteOptions">
+    <div class="route-card" id="route-anc-mnht" onclick="goToStep('anc-mnht')" style="margin-bottom:8px;opacity:0.4">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+        <div style="font-size:22px;width:36px;text-align:center">1</div>
+        <div style="flex:1;text-align:left"><div style="font-weight:700;font-size:14px;color:var(--text)">🏠 ManhattanLife – Home Healthcare</div><div style="font-size:12px;color:var(--text-dim);margin-top:2px">MNHT-HHC available in their state. Enhanced 18–89 / Select 45–89. Best value for 4+ prescriptions (RX Rebate). Since 1850.</div></div>
+        <div style="font-size:12px;color:var(--text-muted)">→</div>
+      </div>
+    </div>
+    <div class="route-card" id="route-anc-ahl" onclick="goToStep('anc-ahl')" style="margin-bottom:8px;opacity:0.4">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer">
+        <div style="font-size:22px;width:36px;text-align:center">2</div>
+        <div style="flex:1;text-align:left"><div style="font-weight:700;font-size:14px;color:var(--text)">🏥 American Home Life – Hospital Indemnity (IdealFlex Series)</div><div style="font-size:12px;color:var(--text-dim);margin-top:2px">AHL available in their state, ages 18–89, and no COPD, cancer, heart problems or insulin-dependent diabetes. Automatic GI window at ages 64.5–70 — passes underwriting regardless of health answers.</div></div>
+        <div style="font-size:12px;color:var(--text-muted)">→</div>
+      </div>
+    </div>
+  </div>
+  <div id="ancRouteResult" style="margin:8px 0 16px"></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep(7)">← Back to Plan Review</button>
+  </div>
+</section>
+
+<section class="step-section" id="step-anc-mnht">
+  <div class="step-header">
+    <div class="step-counter">🏠 ManhattanLife HHC — Questions &amp; Pitch</div>
+    <h1 class="step-title">HHC Questions &amp; Pitch the ManhattanLife Program</h1>
+    <p class="step-subtitle">ManhattanLife Insurance and Annuity Company — Since 1850. Over 175 years. Houston, TX.</p>
+  </div>
+
+  <div style="font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px">Home Health Care Questions</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Let me ask you something — if something were to happen to you, like a fall, a surgery, or anything unexpected, would you rather recuperate at home, or somewhere outside your home like a nursing home or a facility?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That makes sense, and 99% of my clients say the exact same thing. You want to recover in the safety and security of your own home, right? And let me ask you this — who would be helping take care of you at home?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great, and a lot of people say the same thing — but here's the thing: recuperating at home is expensive, and that's why so many people end up in a facility. Not because they want to — because they have no choice. Home care runs about <strong>$5,000 a month</strong>. Go ahead and write that down — $5,000.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And nursing care, physical therapy, someone helping you bathe and cook — that is a lot for [CAREGIVER] to handle. And when you need nurses, therapists, or other help, Medicare only covers a sliver of that, under strict conditions. After that, it's coming out of your pocket. If that started tomorrow, would you be able to cover $5,000 a month out of pocket?</div></div>
+  <div class="tip-card"><span class="card-icon">💡</span> <strong>Write the caregiver's name down.</strong> You will use it by name in the pitch — "this plan pays [CAREGIVER] for taking care of you." That's the emotional core of this sale.</div>
+
+  <div class="warning-card"><span class="card-icon">⚠️</span> <strong>KY, TX, PA:</strong> Max benefit period is 364 days instead of 365. <strong>30-day free look</strong> — guaranteed renewable for life. Benefits pay <strong>regardless of Medicare or any other coverage.</strong></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep('ancillary')">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep('anc-mnht-9')">Next → Build Program</button>
+  </div>
+</section>
+
+<section class="step-section" id="step-anc-mnht-9">
+  <div class="step-header">
+    <div class="step-counter">🏠 ManhattanLife HHC — Build Program &amp; Price</div>
+    <h1 class="step-title">Build Their Program &amp; Go Over Cost</h1>
+    <p class="step-subtitle">ManhattanLife — Select the plan, calculate the RX rebate, then present price.</p>
+    <div id="mnhtProductLabel" style="margin-top:8px"></div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right, I'm actually going to make your day here. What I'm going to build for you is a <strong>Home Health Care Enhanced program</strong> through ManhattanLife — they've been in business <strong>since 1850</strong>, over 175 years, one of the oldest carriers in America. And this is going to solve every single one of the things we just talked about and it works with your Medicare plan.</div></div>
+
+  <div class="calc-input-row">
+    <div class="calc-input-group">
+      <label>Generic RX Count</label>
+      <input type="number" id="mnhtGeneric" value="0" min="0" step="1" oninput="mnhtCalcRx()">
+      <div class="calc-unit">$10 per refill</div>
+    </div>
+    <div class="calc-input-group">
+      <label>Brand Name RX Count</label>
+      <input type="number" id="mnhtBrand" value="0" min="0" step="1" oninput="mnhtCalcRx()">
+      <div class="calc-unit">$25 per refill</div>
+    </div>
+    <div class="calc-input-group">
+      <label>Refill Frequency</label>
+      <div class="calc-radio-group">
+        <input type="radio" id="mnhtFreqMonthly" name="mnhtFreq" value="Monthly" checked onchange="mnhtCalcRx()">
+        <label for="mnhtFreqMonthly">Monthly</label>
+        <input type="radio" id="mnhtFreqQuarterly" name="mnhtFreq" value="Quarterly" onchange="mnhtCalcRx()">
+        <label for="mnhtFreqQuarterly">Quarterly</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="plan-grid" id="mnhtCalcResults"></div>
+
+  <div class="calc-section-label"><span class="calc-num">B</span> Tell Them What They Receive</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" id="mnhtHHCBubble">Alright, go ahead and write this down. You are going to receive <strong>[Select a plan above]</strong> per day for up to 365 days for a nurse or caregiver to come directly to your home and help you when you are unable to perform your daily living activities. That is up to <strong>[Select a plan above]</strong> in home healthcare benefits. And that money comes in a check to you. In your name — not to the doctor, not to [CARRIER]. To you. In your name.</div></div>
+  <div class="agent-line" id="mnhtHomemakerBubble" style="display:none"><span class="agent-label">Agent</span><div class="agent-bubble">And this is one of my favorite parts — remember when you told me [CAREGIVER] would be the one taking care of you? With this program, [CAREGIVER] can get paid <strong>[Select a plan above]</strong> per day for up to <strong>[Select a plan above]</strong> if they are going to help you at home. That check is built in to help your family/friend instead of burdening them.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" id="mnhtRxBubble">Additionally, you will get money back every time you fill your prescriptions — that's $10 back per generic and $25 back per brand name. So those <strong>[# of prescriptions]</strong> prescriptions you take, you will get a check for <strong>[total dollar amount]</strong> each <strong>[quarter/month]</strong> you get them refilled, up to <strong>[total rebate amount]</strong> per year.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">You will also receive $150 per year for your annual physical, $200 per ambulance trip, and $100 per piece of medical equipment prescribed by your doctor when you need this home healthcare.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And this program is guaranteed renewable for life — as long as you pay the premium, they can never cancel you. It pays regardless of Medicare or any other coverage you have. And you get a full 30-day free look period — the policy comes in the mail, you read every page, and if it is not exactly what I described and more, then you send it back for every penny.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">The way this program works is whenever you are unable to perform two of your daily living activities — like bathing, dressing, eating, moving from a bed to a chair, or continence — your doctor fills out a form and then the benefits are triggered. The program pays out when your doctor certifies you need help with those activities.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And you won't be doing this process alone — we have a dedicated customer service team that will help you step-by-step with filing the claim.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you understand and see the value in everything we are getting you today?</div></div>
+
+  <div class="calc-section-label"><span class="calc-num">C</span> Present the Price</div>
+  <div style="font-size:12px;color:var(--text-dim);margin-bottom:12px">Select a plan above to auto-fill the script below.</div>
+
+  <div id="mnhtScriptOutput">
+    <div class="calc-script-placeholder">👆 Select a plan above to generate the script.</div>
+  </div>
+
+  <div class="agent-line" style="margin-top:20px"><span class="agent-label">Agent</span><div class="agent-bubble">I completely agree and I think this makes sense for you — let's go ahead and get you set up.</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now let me walk you through how this actually works when you need to use it. There are six Activities of Daily Living — bathing, dressing, eating, toileting, transferring, and continence. When you're unable to do at least <strong>two of those six</strong> on your own, your doctor fills out a simple certification form confirming that — that's what triggers your benefits. It's not automatic just because you're a policyholder; it only starts paying once that two-ADL threshold is certified.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">From there, you or your caregiver fills out a claim form and sends it in, and ManhattanLife pays out on it.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And you're not doing any of that alone — we have a dedicated Customer Service team that will walk you through filing a claim step by step, answer any questions about your policy, and make sure everything gets paid correctly. You'll never be left trying to figure this out on your own.</div></div>
+
+  <div class="objections-section">
+    <div class="objections-header">⚡ Objections</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"How much does this cost?" <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">It's [DAILY RATE] a day. And the Rx reimbursement alone can cover a big chunk of what you pay each month.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I can't afford it." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Let me adjust the plan down — we can go from Deluxe to Premier or Classic. There's a level that fits your budget.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I don't understand the math?" <span class="arrow">▼</span></div><div class="objection-body"><div id="mnhtMathObjection"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" style="font-style:italic;color:var(--text-dim)">Select a plan above to populate the math breakdown.</div></div></div></div></div>
+  </div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep('anc-mnht')">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep('anc-10')">They're in → Application</button>
+  </div>
+</section>
+
+<section class="step-section" id="step-anc-10">
+  <div class="step-header">
+    <div class="step-counter">🏠 ManhattanLife HHC — Application</div>
+    <h1 class="step-title">Fill Out the Application</h1>
+    <p class="step-subtitle">Let them know they'll get paper mail. Go through each field carefully.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right, perfect — let me get this filled out for you right now. And we're going to set this up so you receive everything through paper mail — your card and your policy documents will arrive in no more than 2 weeks. Does paper mail work for you?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Before we get into the application — do you currently have any hospital or home health care coverage already in place?</div></div>
+
+  <div class="note-card"><span class="card-icon">📋</span> <strong>Note their answer — if they have existing coverage, make sure to note it on the application.</div>
+  
+  <div class="note-card"><span class="card-icon">📋</span> <strong>Complete Application on Carrier Portal</strong><br>Confirm SSN against their Marx report</div>
+
+  <div class="success-card"><span class="card-icon">✅</span> <strong>Collect and confirm each item:</strong><br>• Full name — spelled correctly<br>• Date of birth<br>• Social Security number — or confirm last 4 against Marx report<br>• Current address<br>• Phone number — confirm it's the one you're on<br>• Email address — if they have one</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" style="font-weight:400">Also — you're going to receive a text from a 954 number later today (954-836-0026). That's going to be our customer service team.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" style="font-weight:400">When you need to file a claim, all you have to do is take a picture of your discharge paper or receipt and send it to this number and we will help you get the claim submitted for you.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" style="font-weight:400"><strong>HHC Only:</strong> Once this plan goes into effect you will text us a picture of your prescription refill receipt and our team will get your rebate claim submitted for you. After we file the claim, you will get a check in the mail in about 2-weeks.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" style="font-weight:400">You don't have to do anything else — that's one of the benefits of working with me.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble" style="font-weight:400">This is all through ManhattanLife — and you are in really good hands. They've been around since 1850, over 175 years. And while the name of this company has "Life" in it, I just want to remind you that this is a Home Health Care program — not life insurance. Some people get confused on that.</div></div>
+
+  <div class="success-card"><span class="card-icon">✅</span> <strong>📋 Read UW Questions Off the Application</strong><br>Go through each underwriting question with the client directly from the <strong>Carrier's application portal</strong>. All NO → Continue to payment · Any YES → Does Not Qualify for ManhattanLife — <a style="color:var(--green);cursor:pointer;text-decoration:underline" onclick="goToStep('ancillary')">Back to Qualify the Client →</a></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep('anc-mnht-9')">← Back</button>
+    <button class="nav-btn primary" onclick="goToStep('anc-12')">Application done → Payment</button>
+  </div>
+</section>
+
+<section class="step-section" id="step-anc-12">
+  <div class="step-header">
+    <div class="step-counter">🏠 ManhattanLife HHC — Payment &amp; Close</div>
+    <h1 class="step-title">Payment &amp; Close</h1>
+    <p class="step-subtitle">Text your number first to build trust, then collect bank info, verify, and wrap up.</p>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right — before we wrap this up, I'm going to go ahead and text you my personal phone number right now. I'm going to be your agent — when your documents come in the mail I want you to give me a call directly if you have any questions.</div></div>
+  <div class="tip-card"><span class="card-icon">💡</span> Send your number now. This builds trust before you ask for bank info.</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect. And best phone number for you? ... Do you know the name of your bank?</div></div>
+  <div class="tip-card"><span class="card-icon">💡</span> You can look up their routing number by bank name and state. If they have a check — routing number is on the bottom left, account number is directly to the right of it.</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok starting on the bottom left of the check, can you read me the routing number. Ok and what is the accounting number, including all of the 0s. And is this a checking or savings account?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Before we finish up, let's confirm your banking details. Can you spell out your first and last name exactly as it appears on your checkbook or bank account, along with the routing number and whether it's checking or savings?</div></div>
+  <div class="warning-card"><span class="card-icon">⚠️</span> <strong>Name must match the bank exactly.</strong> A number of banking failures come back because the name on the account doesn't exactly match what's on file with the bank — e.g. account is under "Michael J. Smith" but we submit "Michael Smith" or "Mike Smith." Some banks won't pull the premium at all if the name doesn't match exactly. <strong>Fintech banks are not accepted</strong> — confirm this too.</div>
+  <div style="background:rgba(239,68,68,0.08);border:2px solid var(--red);border-radius:var(--radius);padding:16px;margin:12px 0;text-align:center"><span style="font-size:20px;font-weight:900;color:var(--red);text-transform:uppercase;letter-spacing:0.04em">USE BANKING VALIDATOR TOOL — ONLY PROCEED IF GREEN CHECK IS PROVIDED VIA VALIDATOR</span></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">OK, before I submit this I want to make sure this goes through for you. Do you have the money in your account now, or do you need me to set this for when your Social Security payment comes in?</div></div>
+
+  <div style="margin:16px 0">
+    <div class="calc-radio-group" style="max-width:100%">
+      <input type="radio" id="fundsYes" name="fundsCheck" value="yes" onchange="toggleFunds()" checked>
+      <label for="fundsYes" style="padding:12px 16px;font-size:14px">✓ Yes — Has Funds Today</label>
+      <input type="radio" id="fundsNo" name="fundsCheck" value="no" onchange="toggleFunds()">
+      <label for="fundsNo" style="padding:12px 16px;font-size:14px">📅 No — Push to SS Deposit Date</label>
+    </div>
+  </div>
+
+  <!-- SS Draft Date Calculator (hidden by default) -->
+  <div id="ssDraftCalcWrap" style="display:none">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:0 0 16px 0">
+    <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px">📅 SS Draft Date Calculator</div>
+    <div style="font-size:12px;color:var(--text-dim);margin-bottom:16px">Determine the recommended premium draft date based on their Social Security payment schedule.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div class="calc-input-group">
+        <label>Date of Birth</label>
+        <input type="date" id="ssDob" onchange="calcDraftDate()">
+      </div>
+      <div class="calc-input-group">
+        <label>Enrollment Date</label>
+        <input type="date" id="ssEnrollDate" onchange="calcDraftDate()">
+      </div>
+    </div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And do you receive Supplemental Security Income (SSI)?</div></div>
+    <div style="display:flex;justify-content:center;margin:12px 0 8px">
+      <div class="calc-radio-group" style="max-width:500px;width:100%">
+        <input type="radio" id="ssiYes" name="ssiCheck" value="yes" onchange="ancSsiChange()">
+        <label for="ssiYes">Yes SSI</label>
+        <input type="radio" id="ssiNo" name="ssiCheck" value="no" onchange="ancSsiChange()" checked>
+        <label for="ssiNo">No SSI</label>
+      </div>
+    </div>
+    <div id="ssiResponse" style="margin-bottom:16px"><div class="note-card"><span class="card-icon">📋</span> Align with when client has funds (tomorrow or Social Security pay date).</div></div>
+    <div id="ssDraftResult"></div>
+  </div>
+  </div>
+
+
+  <hr class="section-divider">
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right, last step —</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">I'm going to apply your e-signature to this application. The way we do that is with your Mother's Maiden Name. What is your Mother's Maiden Name?</div></div>
+
+  <hr class="section-divider">
+
+  <div style="background:rgba(16,185,129,0.08);border:2px solid rgba(16,185,129,0.4);border-radius:var(--radius);padding:20px;margin:20px 0">
+    <div style="font-size:14px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">📋 Agent Enrollment Verification — Required Before Submission</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok [CLIENT], I have your application all ready for submission here and I do just want to confirm a few details here with you:</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">You are enrolling in a Short-Term Home Healthcare plan with ManhattanLife.</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">The monthly premium for this plan is [$$.$$] and this will draft on [MM/DD].</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you understand the benefits you are getting today?</div></div>
+    <div style="font-size:13px;font-weight:700;color:var(--green);margin:4px 0 8px 0">⬆️ [Need a verbal yes]</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Will you have the funds in your account to pay the premium on [MM/DD]?</div></div>
+    <div style="font-size:13px;font-weight:700;color:var(--green);margin:4px 0 8px 0">⬆️ [Need a verbal yes]</div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right [NAME] — you are all set! You're going to receive everything in the mail within 2-4 weeks. Any time you go to the hospital, need an ambulance, or want to file a claim — just take a picture of your receipt and send it to our customer service team. They'll handle it and you'll get a check in about 2 weeks. You don't have to do a thing.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And don't let anybody change that [CARRIER] plan either — it's a great plan. But with this program on top of it, you are fully covered. Any questions for me?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right [NAME] — it was a pleasure talking with you today. You made a great decision. Have a wonderful rest of your day!</div></div>
+
+  <div class="call-complete"><div class="check">✅</div><h3>Call Complete</h3></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep('anc-10')">← Back</button>
+    <button class="nav-btn primary" onclick="resetCall()">↺ New Call</button>
+  </div>
+</section>
+
+<section class="step-section" id="step-anc-ahl">
+  <div class="step-header">
+    <div class="step-counter">🏥 AHL Hospital Indemnity</div>
+    <h1 class="step-title">AHL IdealFlex Series</h1>
+    <p class="step-subtitle">American Home Life — IdealFlex Series. Founded 1909. Built to cover the exact copays they wrote down.</p>
+  </div>
+
+  <!-- AHL Step 1 -->
+  <div style="font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px">Step 1 of 3 — Pitch the Plan</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">The plan we just set you up with is excellent, but as you know there are copays with Medicare. As we mentioned earlier your copays for an ambulance are &lt;$$$&gt;, copays for an outpatient surgery are &lt;$$$&gt; and copays for a visit to the hospital are &lt;$$$&gt;.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">If you were to get a bill tomorrow for &lt;total amount&gt; is that something that would give you some heart burn?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Exactly, I completely agree. Most people can’t afford those bills and Medicare costs go up every year.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right, I'm going to make your day here. There's a program that's going to cover every single one of those copays you just wrote down — and the money comes directly to you as a check. Not to the doctor, not to the hospital, not to [CARRIER] — straight to you, in your name.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you see value in not having to worry about that hospital bills, the cost of an ambulance, and the cost of a surgery?</div></div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--text);margin:20px 0 12px">Base Benefits — Included Automatically</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Hospital confinement:</strong> This program pays you for everyday you are in the hospital and and it even pays out if you're kept for observation and never formally admitted. Most programs don't cover that — this one does.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Emergency room and urgent care:</strong> If you end up in the ER, this pays you $150 per visit — up to 3 visits per year. Most of my clients never have to come out of pocket for an ER visit because of this.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Mental health confinement:</strong> If you ever need inpatient mental health care, this pays $175 a day for up to 4 days per year — built right into the base at no extra cost.</div></div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--text);margin:20px 0 12px">Riders We Add On</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Ambulance:</strong> Next to the Ambulance copay, can you write down [AMBULANCE BENEFIT TOTAL] - this is what you get paid if you have to take an ambulance.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Cancer rider:</strong> This is the one most people don't think about until it's too late. Medicare requires you to pay 20% of your cancer treatment up until you hit your max out-of-pocket, which on your plan is [MOOP Total]. This program sends you a lump sum check if you're ever diagnosed with cancer, so that you never have to worry about that cost. And just so you know, 1 in 2 men and 1 in 3 women will be diagnosed with cancer in their lifetime so this is something that just about all of my clients end up using.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Heart attack and stroke:</strong> Also, if you ever have a heart attack or stroke, this pays you a lump sum directly, [Lump sum Payment] so you never have to worry about those costs either. </div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Outpatient rehabilitation:</strong> If you need physical therapy or outpatient rehab after a hospital stay, this pays you for those visits too.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"><strong>Annual increasing benefit:</strong> And here's something really powerful — this plan automatically increases your daily benefit by 5% every single year, up to 50% total. So as the cost of healthcare goes up, your benefit keeps pace. You're never falling behind.</div></div>
+
+  
+  <div class="tip-card"><span class="card-icon">💡</span> Pause here. Let it land. Then move to the price.</div>
+  <div class="warning-card"><span class="card-icon">⚠️</span> <strong>30-day waiting period</strong> and <strong>6-month pre-existing condition limitation</strong> apply. GI window for ages 64.5–70 (daily benefit only).</div>
+
+  <div class="objections-section">
+    <div class="objections-header">⚡ Objections</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"My plan already covers hospital bills." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">It covers part of it — but those copays we went through come right out of your pocket even with [CARRIER]. This covers exactly those gaps and sends the check directly to you so you never have to pay that bill out of your own money.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I don't go to the hospital." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">That's great — and that's exactly why now is the perfect time. You have a 7% chance of going in the next year and 51% in the next 3 years. You can only get this while you're healthy. Once something happens, it's too late.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I don't think I'll get cancer." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Nobody does — and 1 in 2 men and 1 in 3 women will be diagnosed with cancer in their lifetime. Your plan covers it at 80% — you're on the hook for 20% until you hit your max out-of-pocket. That could be thousands. This rider is what makes sure that never comes out of your pocket.</div></div></div></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- AHL Step 2 -->
+  <div style="font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px">Step 2 of 3 — Build the Plan &amp; Present the Price</div>
+
+  <div class="note-card"><span class="card-icon">💻</span> <strong>Build Quote — IdealFlex Series</strong><br>Run quote at <strong>idealflexseries.com</strong> — select daily benefit, days, riders: cancer, heart attack &amp; stroke, ambulance, outpatient rehab, annual increasing benefit.</div>
+
+  <div style="font-size:14px;font-weight:700;color:var(--text);margin:20px 0 12px">Have Them Write Down What They Receive</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right next to the hospital copay you wrote down earlier, go ahead and write this down. You're going to receive [HOPSITAL TOTAL BENEFIT] this is what you get paid if you are in the hospital for [# DAYS]. </div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"> And if you just go to the Emergency Room for a visit, you still get a check for $150., ambulance covered, cancer protection, heart attack and stroke protection, and outpatient rehab. All of that money comes directly to you as a check — not to the hospital, not to the doctor, not to [CARRIER]. To you.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"> Next to the Ambulance copay you wrote down earlier, can you write down [Ambulance Total]. This is what you get paid if you take an ambulence. cancer protection, heart attack and stroke protection, and outpatient rehab. All of that money comes directly to you as a check — not to the hospital, not to the doctor, not to [CARRIER]. To you.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble"> In addition to that, you are going to get a lump sum payment of [CANCER TOTAL] if you are diagnosed with cancer, [HEART ATTACK TOTAL] if you ever have a heart attack or stroke, and [REHAB TOTAL] if you ever need outpatient rehab. All of that money comes directly to you as a check — not to the hospital, not to the doctor, not to [CARRIER]. To you in your name.</div></div>
+
+  
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you understand and see the value in everything we are getting you today?</div></div>
+  <div class="success-card"><span class="card-icon">✅</span> Wait for them to confirm. Gets a verbal yes before you mention price.</div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now this comes out to [DAILY RATE] a day, which is [MONTHLY RATE] a month. I'm assuming that's affordable, right?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect, I agree and think this makes sense for you. I want this protection to start for you today, do you have the funds in your account today?</div></div>
+
+  <div style="margin:16px 0">
+    <div class="calc-radio-group" style="max-width:100%">
+      <input type="radio" id="ahlStep2FundsYes" name="ahlStep2FundsCheck" value="yes" onchange="document.getElementById('ahlStep2SsWrap').style.display='none'" checked>
+      <label for="ahlStep2FundsYes" style="padding:12px 16px;font-size:14px">✓ Yes — Has Funds Today</label>
+      <input type="radio" id="ahlStep2FundsNo" name="ahlStep2FundsCheck" value="no" onchange="document.getElementById('ahlStep2SsWrap').style.display='block'">
+      <label for="ahlStep2FundsNo" style="padding:12px 16px;font-size:14px">📅 No — Push to SS Deposit Date</label>
+    </div>
+  </div>
+
+  <div id="ahlStep2SsWrap" style="display:none">
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:0 0 16px 0">
+    <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px">📅 SS Draft Date Calculator</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div class="calc-input-group">
+        <label>Date of Birth</label>
+        <input type="date" id="ahlStep2SsDob" onchange="ahlStep2CalcDraft()">
+      </div>
+      <div class="calc-input-group">
+        <label>Enrollment Date</label>
+        <input type="date" id="ahlStep2SsEnroll" onchange="ahlStep2CalcDraft()">
+      </div>
+    </div>
+    <div id="ahlStep2SsDraftResult"></div>
+  </div>
+  </div>
+
+  <div class="objections-section">
+    <div class="objections-header">⚡ Objections</div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I can't afford it." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Let me adjust the daily benefit amount or the riders to get it into your budget. The plan is fully customizable — we can make it work.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"I need to think about it." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">What's the one thing holding you back? The only risk is waiting until something happens and you can no longer qualify. Let's talk through it right now.</div></div></div></div>
+    <div class="objection"><div class="objection-trigger" onclick="toggleObjection(this)">"Let me talk to my family first." <span class="arrow">▼</span></div><div class="objection-body"><div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">They're going to be glad you did this. Get approved today and show them the paperwork when it arrives. Let's get you protected now.</div></div></div></div>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- AHL Step 3 -->
+  <div style="font-size:16px;font-weight:700;color:var(--accent);margin-bottom:16px">Step 3 of 3 — Application &amp; Payment</div>
+
+  <div class="note-card"><span class="card-icon">📋</span> <strong>Complete Application — IdealFlex Series</strong><br>Fill out at <strong>idealflexseries.com</strong> — instant underwriting decision (Green/Yellow/Red). Text or voice authorization. True SS billing available.</div>
+  <div class="success-card"><span class="card-icon">✅</span> <strong>Instant decision — Green / Yellow / Red.</strong> Yellows are handled immediately. If approved, proceed to payment.</div>
+  <div class="target-card"><span class="card-icon">🎯</span> <strong>Assume the sale.</strong> Go straight to payment.</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Before we wrap this up — I'm going to text you my personal phone number right now. I'm going to be your agent — when your documents come in the mail I want you to give me a call directly if you have any questions.</div></div>
+  <div class="tip-card"><span class="card-icon">💡</span> Send your number now. Builds trust before you ask for bank info.</div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Perfect. And best phone number for you? ... Do you know the name of your bank?</div></div>
+  <div class="tip-card"><span class="card-icon">💡</span> You can look up their routing number by bank name and state. If they have a check — routing number is on the bottom left, account number is directly to the right of it.</div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok starting on the bottom left of the check, can you read me the routing number. Ok and what is the accounting number, including all of the 0s. And is this a checking or savings account?</div></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Before we finish up, let's confirm your banking details. Can you spell out your first and last name exactly as it appears on your checkbook or bank account, along with the routing number and whether it's checking or savings?</div></div>
+  <div class="warning-card"><span class="card-icon">⚠️</span> <strong>Name must match the bank exactly.</strong> A number of banking failures come back because the name on the account doesn't exactly match what's on file with the bank — e.g. account is under "Michael J. Smith" but we submit "Michael Smith" or "Mike Smith." Some banks won't pull the premium at all if the name doesn't match exactly. <strong>Fintech banks are not accepted</strong> — confirm this too.</div>
+  <div style="background:rgba(239,68,68,0.08);border:2px solid var(--red);border-radius:var(--radius);padding:16px;margin:12px 0;text-align:center"><span style="font-size:20px;font-weight:900;color:var(--red);text-transform:uppercase;letter-spacing:0.04em">USE BANKING VALIDATOR TOOL — ONLY PROCEED IF GREEN CHECK IS PROVIDED VIA VALIDATOR</span></div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and let's go ahead and align any future payments with your Social Security pay date so you never have to worry about the funds being in your account. My system is showing that you will get your next Social Security deposited on <strong id="ahlSsPayLabel">[enter DOB into calculator below]</strong>.</div></div>
+
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0">
+    <div style="font-size:15px;font-weight:700;color:var(--accent);margin-bottom:4px">📅 SS Draft Date Calculator</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div class="calc-input-group">
+        <label>Date of Birth</label>
+        <input type="date" id="ahlSsDob" onchange="ahlCalcDraft()">
+      </div>
+      <div class="calc-input-group">
+        <label>Enrollment Date</label>
+        <input type="date" id="ahlSsEnroll" onchange="ahlCalcDraft()">
+      </div>
+    </div>
+    <div id="ahlSsDraftResult"></div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Last step — I'm going to send you a text — this will be your e-signature on this application.</div></div>
+  <div class="warning-card"><span class="card-icon">⚠️</span> <strong>Text authorization:</strong> Client receives a text and confirms. <strong>Voice authorization:</strong> Coach them through the questionnaire — you cannot speak during their voice auth.</div>
+
+  <hr class="section-divider">
+
+  <div style="background:rgba(16,185,129,0.08);border:2px solid rgba(16,185,129,0.4);border-radius:var(--radius);padding:20px;margin:20px 0">
+    <div style="font-size:14px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px">📋 Agent Enrollment Verification — Required Before Submission</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok [CLIENT], I have your application all ready for submission here and I do just want to confirm a few details here with you:</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">You are enrolling in a Hospital Indemnity plan with American Home Life (AHL).</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">The monthly premium for this plan is [$$.$$] and this will draft on [MM/DD].</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Do you understand the benefits you are getting today?</div></div>
+    <div style="font-size:13px;font-weight:700;color:var(--green);margin:4px 0 8px 0">⬆️ [Need a verbal yes]</div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Will you have the funds in your account to pay the premium on [MM/DD]?</div></div>
+    <div style="font-size:13px;font-weight:700;color:var(--green);margin:4px 0 8px 0">⬆️ [Need a verbal yes]</div>
+  </div>
+
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right [NAME] — you are all set! You're going to receive everything in the mail within 2-4 weeks. Any time you go to the hospital, need an ambulance, or want to file a claim — just take a picture of your receipt and send it to our customer service team. They'll handle it and you'll get a check in about 2 weeks. You don't have to do a thing.</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">And don't let anybody change that [CARRIER] plan either — it's a great plan. But with this on top of it, you are fully protected. Any questions for me?</div></div>
+  <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">All right [NAME] — it was a pleasure talking with you today. You made a great decision. Have a wonderful rest of your day!</div></div>
+
+  <div class="call-complete"><div class="check">✅</div><h3>AHL HI Call Complete</h3></div>
+
+  <div class="step-nav">
+    <button class="nav-btn" onclick="goToStep('ancillary')">← Back</button>
     <button class="nav-btn primary" onclick="resetCall()">↺ New Call</button>
   </div>
 </section>
@@ -1526,9 +2260,10 @@ let currentStep = 1;
 
 // ═══ STEP NAVIGATION ═══
 function goToStep(step) {
-  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
   const id = `step-${step}`;
   const el = document.getElementById(id);
+  if (!el) return;
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('active'));
   if (el) {
     el.classList.add('active');
     window.scrollTo({top: 0, behavior: 'smooth'});
@@ -1557,6 +2292,7 @@ function toggleObjection(trigger) {
 }
 
 function resetCall() {
+  try { ["closeIntYes","closeIntNo"].forEach(i=>{const e=document.getElementById(i); if(e) e.checked=false;}); const cr=document.getElementById("closeInterestResult"); if(cr) cr.innerHTML=""; } catch(e){}
   document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('completed'));
   document.querySelectorAll('.objection').forEach(o => o.classList.remove('open'));
 
@@ -1567,6 +2303,7 @@ function resetCall() {
   document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
   ['vaRxResult','coverageRouteResult'].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = ''; });
   ['coverageNoneContent','coverageVaContent','coverageTricareContent','coverageOtherContent','vaDoctorsCivilianNote','vaDoctorsVaOnlyNote'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
+  resetAncillary();
   document.getElementById('tpmoConfirmNo').checked = true;
   document.getElementById('scopeConfirmNo').checked = true;
   document.getElementById('lookupConfirmNo').checked = true;
@@ -1761,10 +2498,543 @@ function updateSobProgress() {
 }
 
 
+
+// ═══ ANCILLARY PRODUCT SCRIPT ═══
+const ahlStates = ['AL','AR','CO','FL','GA','IL','IA','KS','KY','LA','MD','MI','MS','MO','NE','NV','NC','OH','OK','PA','SC','TN','TX','UT','VA','WV','WI'];
+const mnhtEnhancedStates = ['WV','OH','MI','WI','NC','SC','GA','TN','AL','MS','LA','AR','MO','IL','IA','SD','NE','OK','TX','CO','WY','AZ'];
+const mnhtSelectStates = ['PA','DE','MD','VA','IN','ND','MT','ID','OR','NV'];
+const mnhtAllStates = [...mnhtEnhancedStates, ...mnhtSelectStates];
+let ancState = '';
+let ancAge = null;
+let ancPreciseAge = null;
+let ancHHCOnly = false;
+let ancIneligible = false;
+let ancInGI = false;
+
+function fmtCalc(n) {
+  return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+
+function ancUpdateFlags() {
+  const g = id => document.getElementById(id);
+  const medicaid = g('chkAncMedicaid').checked;
+  const meds4 = g('chkAncMeds').checked;
+  const copd = g('chkCOPD').checked, diabetes = g('chkDiabetes').checked, cancer = g('chkCancer').checked, heart = g('chkHeart').checked;
+  const nursing = g('chkNursing').checked, receivingHHC = g('chkReceivingHHC').checked, adl = g('chkADL').checked;
+  const insulinYes = g('insulinYes').checked, insulinNo = g('insulinNo').checked;
+
+  g('ancMedicaidResult').innerHTML = medicaid
+    ? '<div class="warning-card"><span class="card-icon">⚠️</span> <strong>End call</strong>, Medicaid will cover the client\'s bills.</div>' : '';
+  g('ancMedsResult').innerHTML = meds4
+    ? '<div class="note-card"><span class="card-icon">📋</span> <strong>HHC Route</strong> – client will likely see value in RX Rebate</div>' : '';
+
+  g('insulinCheck').style.display = diabetes ? 'block' : 'none';
+  const result = g('healthFlagResult');
+
+  if (nursing || receivingHHC || adl) {
+    ancIneligible = true; ancHHCOnly = false;
+    result.innerHTML = '<div class="warning-card"><span class="card-icon">⚠️</span> <strong>Ineligible — End Call.</strong> Client does not qualify. Thank them for their time and end the call politely.</div>';
+  } else {
+    ancIneligible = false;
+    const hhcOnly = copd || cancer || heart || (diabetes && insulinYes);
+    ancHHCOnly = hhcOnly;
+    const giNow = ancPreciseAge !== null && ancPreciseAge >= 64.5 && ancAge <= 70 && (!ancState || ahlStates.includes(ancState));
+    if (hhcOnly && giNow) {
+      const reasons = [];
+      if (copd) reasons.push('COPD');
+      if (diabetes && insulinYes) reasons.push('Diabetes (Insulin)');
+      if (cancer) reasons.push('Cancer');
+      if (heart) reasons.push('Heart Problems');
+      result.innerHTML = '<div class="note-card"><span class="card-icon">📋</span> <strong>Guaranteed Issue</strong> — ' + reasons.join(', ') + ' flagged, but the client is in the GI window (ages 64.5–70) and passes American Home Life underwriting regardless of health answers. Both options are available.</div>';
+    } else if (hhcOnly) {
+      const reasons = [];
+      if (copd) reasons.push('COPD');
+      if (diabetes && insulinYes) reasons.push('Diabetes (Insulin)');
+      if (cancer) reasons.push('Cancer');
+      if (heart) reasons.push('Heart Problems');
+      result.innerHTML = '<div class="note-card"><span class="card-icon">📋</span> <strong>HHC Route Only</strong> — ' + reasons.join(', ') + ' flagged. Not eligible for Hospital Indemnity (American Home Life). ManhattanLife Home Healthcare only (outside the GI window).</div>';
+    } else if (diabetes && insulinNo) {
+      result.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> Diabetes (no insulin) — eligible for Home Healthcare and Hospital Indemnity.</div>';
+    } else {
+      result.innerHTML = '';
+    }
+  }
+  if (medicaid) ancIneligible = true;
+  ancUpdateRouting();
+}
+
+function ancUpdateState() {
+  const val = document.getElementById('ancStateSelect').value;
+  ancState = val;
+  const info = document.getElementById('ancStateInfo');
+  if (!val) { info.innerHTML = ''; ancUpdateAge(); return; }
+  const hasAHL = ahlStates.includes(val);
+  const hasMNHT = mnhtAllStates.includes(val);
+  const mnhtIsSelect = mnhtSelectStates.includes(val);
+  let badges = '';
+  if (hasMNHT) badges += '<span class="state-badge green">✓ MNHT-HHC Available' + (mnhtIsSelect ? ' (Select)' : '') + '</span> ';
+  else badges += '<span class="state-badge red">✗ MNHT-HHC</span> ';
+  if (hasAHL) badges += '<span class="state-badge green">✓ AHL Available</span>';
+  else badges += '<span class="state-badge red">✗ AHL</span>';
+  info.innerHTML = badges;
+  ancUpdateAge();
+}
+
+function ancUpdateAge() {
+  const dob = document.getElementById('ancDob').value;
+  const info = document.getElementById('ancAgeInfo');
+  if (!dob) { info.innerHTML = ''; ancAge = null; ancPreciseAge = null; ancUpdateFlags(); return; }
+  const parts = dob.split('-');
+  const birthDate = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+  if (isNaN(age) || age < 0) { info.innerHTML = ''; ancAge = null; ancPreciseAge = null; ancUpdateFlags(); return; }
+  const preciseAge = (today - birthDate) / (1000 * 60 * 60 * 24 * 365.25);
+  ancAge = age; ancPreciseAge = preciseAge;
+
+  if (age < 18) {
+    info.innerHTML = '<span class="state-badge red">✗ Age ' + age + ' — Too Young</span>';
+  } else if (age > 89) {
+    info.innerHTML = '<span class="state-badge red">✗ Age ' + age + ' — Too Old</span>';
+  } else {
+    let badges = '<span class="state-badge green">Age ' + age + '</span> ';
+    const mnhtSelectOnly = mnhtSelectStates.includes(ancState);
+    const mnhtMinAge = mnhtSelectOnly ? 45 : 18;
+    if (age >= mnhtMinAge && age <= 89 && mnhtAllStates.includes(ancState)) {
+      badges += '<span class="state-badge green">✓ MNHT-HHC Eligible' + (mnhtSelectOnly ? ' (Select)' : '') + '</span> ';
+    } else if (mnhtAllStates.includes(ancState)) {
+      badges += '<span class="state-badge red">✗ MNHT-HHC</span> ';
+    }
+    if (!ancState || ahlStates.includes(ancState)) {
+      if (preciseAge >= 64.5 && age <= 70) badges += '<span class="state-badge green">✓ AHL-HI Eligible — Guaranteed Issue (No UW)</span>';
+      else badges += '<span class="state-badge green">✓ AHL-HI Eligible</span>';
+    }
+    info.innerHTML = badges;
+  }
+  ancUpdateFlags();
+}
+
+function ancUpdateRouting() {
+  const mnht = document.getElementById('route-anc-mnht');
+  const ahl = document.getElementById('route-anc-ahl');
+  const out = document.getElementById('ancRouteResult');
+  if (!mnht || !ahl) return;
+  [mnht, ahl].forEach(el => { el.style.opacity = '0.4'; el.style.borderColor = ''; });
+  out.innerHTML = '';
+  if (ancIneligible) {
+    out.innerHTML = '<div class="warning-card"><span class="card-icon">⚠️</span> <strong>No path available — End Call.</strong> Client is not eligible for the ancillary products. Thank them for their time.</div>';
+    return;
+  }
+  const meds4 = document.getElementById('chkAncMeds').checked;
+  const hasAHL = ahlStates.includes(ancState);
+  const hasMNHT = mnhtAllStates.includes(ancState);
+  const mnhtMinAge = mnhtSelectStates.includes(ancState) ? 45 : 18;
+  const inGI = hasAHL && ancPreciseAge !== null && ancPreciseAge >= 64.5 && ancAge <= 70;
+  ancInGI = inGI;
+  // Knockouts: state, age, nursing/HHC/ADL (handled above). Health answers only knock out AHL outside the GI window.
+  const mnhtOk = hasMNHT && ancAge !== null && ancAge >= mnhtMinAge && ancAge <= 89;
+  const ahlOk = hasAHL && ancAge !== null && ancAge >= 18 && ancAge <= 89 && (!ancHHCOnly || inGI);
+  if (mnhtOk) { mnht.style.opacity = '1'; mnht.style.borderColor = 'var(--green)'; }
+  if (ahlOk) { ahl.style.opacity = '1'; ahl.style.borderColor = 'var(--green)'; }
+  const giNote = inGI ? ' <strong>Guaranteed Issue window (ages 64.5–70):</strong> the client passes American Home Life underwriting regardless of health answers.' : '';
+  if (mnhtOk && ahlOk) {
+    out.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> <strong>Both ManhattanLife Home Healthcare and American Home Life Hospital Indemnity are available.</strong>' + (meds4 ? ' Client is taking 4+ prescriptions and will see the most value in Home Healthcare (RX Rebate).' : '') + giNote + '</div>';
+  } else if (mnhtOk) {
+    out.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> <strong>Flagged: ManhattanLife Home Healthcare.</strong>' + (meds4 ? ' Client will see the most value in the RX Rebate.' : '') + '</div>';
+  } else if (ahlOk) {
+    out.innerHTML = '<div class="success-card"><span class="card-icon">✅</span> <strong>Flagged: American Home Life Hospital Indemnity.</strong>' + giNote + '</div>';
+  } else if (ancState && ancAge !== null) {
+    out.innerHTML = '<div class="warning-card"><span class="card-icon">⚠️</span> <strong>Neither ManhattanLife nor American Home Life is available</strong> for this client based on state, age and health answers. Thank them for their time.</div>';
+  }
+}
+
+function getNthWeekday(year, month, weekday, n) {
+  // Get the nth occurrence of a weekday (0=Sun, 3=Wed) in a given month
+  const first = new Date(year, month, 1);
+  let day = first.getDay();
+  let diff = (weekday - day + 7) % 7;
+  let date = 1 + diff + (n - 1) * 7;
+  return new Date(year, month, date);
+}
+
+function toggleFunds() {
+  const needsSS = document.getElementById('fundsNo').checked;
+  document.getElementById('ssDraftCalcWrap').style.display = needsSS ? 'block' : 'none';
+}
+
+function calcDraftDate() {
+  const dobVal = document.getElementById('ssDob').value;
+  const enrollVal = document.getElementById('ssEnrollDate').value;
+  const ssi = !!(document.getElementById('ssiYes') && document.getElementById('ssiYes').checked);
+  const result = document.getElementById('ssDraftResult');
+
+  if (!dobVal || !enrollVal) {
+    result.innerHTML = '';
+    return;
+  }
+
+  const dobParts = dobVal.split('-');
+  const enrollParts = enrollVal.split('-');
+  const dob = new Date(parseInt(dobParts[0]), parseInt(dobParts[1]) - 1, parseInt(dobParts[2]));
+  const enroll = new Date(parseInt(enrollParts[0]), parseInt(enrollParts[1]) - 1, parseInt(enrollParts[2]));
+  const birthDay = dob.getDate();
+
+  let ssDate; // The SS payment date this month
+  let ssLabel = '';
+  let ssiInfo = '';
+
+  // Determine SS payment Wednesday based on DOB
+  const eMonth = enroll.getMonth();
+  const eYear = enroll.getFullYear();
+
+  let wedNumber;
+  if (birthDay >= 1 && birthDay <= 10) {
+    wedNumber = 2; // 2nd Wednesday
+    ssLabel = 'Born 1st–10th → SS paid on 2nd Wednesday';
+  } else if (birthDay >= 11 && birthDay <= 20) {
+    wedNumber = 3; // 3rd Wednesday
+    ssLabel = 'Born 11th–20th → SS paid on 3rd Wednesday';
+  } else {
+    wedNumber = 4; // 4th Wednesday
+    ssLabel = 'Born 21st–31st → SS paid on 4th Wednesday';
+  }
+
+  // Get the SS Wednesday for the enrollment month
+  ssDate = getNthWeekday(eYear, eMonth, 3, wedNumber);
+
+  // Check if within 72 hours of this month's SS date
+  const hoursUntilSS = (ssDate - enroll) / (1000 * 60 * 60);
+  let draftMonth, draftYear;
+  let pushed = false;
+
+  if (hoursUntilSS < 72 && hoursUntilSS > -24) {
+    // Too close or already passed — push to next month
+    draftMonth = eMonth + 1;
+    draftYear = eYear;
+    if (draftMonth > 11) { draftMonth = 0; draftYear++; }
+    pushed = true;
+  } else if (hoursUntilSS < -24) {
+    // Already passed this month — push to next month
+    draftMonth = eMonth + 1;
+    draftYear = eYear;
+    if (draftMonth > 11) { draftMonth = 0; draftYear++; }
+    pushed = true;
+  } else {
+    draftMonth = eMonth;
+    draftYear = eYear;
+  }
+
+  const recommendedSS = getNthWeekday(draftYear, draftMonth, 3, wedNumber);
+  const ssDateStr = recommendedSS.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+
+  // SSI info
+  let ssiDateStr = '';
+  if (ssi) {
+    // SSI clients — always draft on the 3rd
+    let ssiDraftMonth = eMonth, ssiDraftYear = eYear;
+    const thirdOfMonth = new Date(eYear, eMonth, 3);
+    const hrsTo3rd = (thirdOfMonth - enroll) / (1000 * 60 * 60);
+    if (hrsTo3rd < 72) {
+      ssiDraftMonth = eMonth + 1;
+      ssiDraftYear = eYear;
+      if (ssiDraftMonth > 11) { ssiDraftMonth = 0; ssiDraftYear++; }
+    }
+    const ssiDraftDate = new Date(ssiDraftYear, ssiDraftMonth, 3);
+    // Override the recommended date to the 3rd
+    const ssiDraftStr = ssiDraftDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    ssiInfo = `
+      <div style="margin-top:10px;padding:8px 12px;background:rgba(59,130,246,0.08);border-radius:6px;font-size:12px;color:var(--accent)">
+        <strong>💡 SSI Client → Draft on the 3rd:</strong> <strong>${ssiDraftStr}</strong>
+      </div>`;
+  }
+
+  let pushedNote = '';
+  if (pushed) {
+    pushedNote = `<div style="margin-top:8px;padding:6px 10px;background:rgba(251,191,36,0.1);border-radius:6px;font-size:12px;color:#C07D10">⚠️ Enrollment is within 72 hours of this month's SS date — <strong>pushed to next month</strong> per policy.</div>`;
+  }
+
+  result.innerHTML = `
+    <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:var(--radius-sm);padding:14px 16px">
+      <div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">✅ Recommended Draft Date</div>
+      <div style="font-size:20px;font-weight:800;color:var(--green);margin-bottom:4px">${ssDateStr}</div>
+      <div style="font-size:12px;color:var(--text-dim)">${ssLabel}</div>
+      ${pushedNote}
+      ${ssiInfo}
+    </div>`;
+}
+
+// ═══ MANHATTAN LIFE HHC CALCULATOR ═══
+let mnhtPremiums = { Classic: 0, Premier: 0, Deluxe: 0 };
+let mnhtSelectedPlan = null;
+
+function getMnhtProductType() {
+  return mnhtSelectStates.includes(ancState) ? 'select' : 'enhanced';
+}
+
+function onMnhtPremChange(plan, el) { mnhtPremiums[plan] = parseFloat(el.value) || 0; }
+function onMnhtPremCommit(plan, el) { mnhtPremiums[plan] = parseFloat(el.value) || 0; mnhtCalcRx(); }
+function onMnhtPremKey(e, plan, el) { if (e.key === 'Enter') el.blur(); }
+
+function mnhtSelectPlan(key) {
+  mnhtSelectedPlan = key;
+  document.querySelectorAll('#mnhtCalcResults .calc-plan').forEach(el => el.classList.remove('selected'));
+  const card = document.querySelector(`#mnhtCalcResults .calc-plan[data-plan="${key}"]`);
+  if (card) card.classList.add('selected');
+  const isSelect = getMnhtProductType() === 'select';
+  const enhanced = { Classic: { daily: '$150', aide: '$50/day (365 days)', homemakerDaily: '$25', homemakerTotal: '$4,000', total: '$54,750' }, Premier: { daily: '$300', aide: '$100/day (365 days)', homemakerDaily: '$50', homemakerTotal: '$5,000', total: '$109,500' }, Deluxe: { daily: '$450', aide: '$150/day (365 days)', homemakerDaily: '$75', homemakerTotal: '$6,000', total: '$164,250' } };
+  const select = { Classic: { daily: '$150', aide: '$40/day (60 days)', total: '$54,750' }, Premier: { daily: '$300', aide: '$80/day (60 days)', total: '$109,500' }, Deluxe: { daily: '$450', aide: '$120/day (60 days)', total: '$164,250' } };
+  const d = isSelect ? select[key] : enhanced[key];
+  const bubble = document.getElementById('mnhtHHCBubble');
+  if (bubble) {
+    bubble.innerHTML = `Alright, go ahead and write this down. You are going to receive <span class="hl">${d.daily} per day</span> for up to 365 days for a nurse or caregiver to come directly to your home and help you when you are unable to perform your daily living activities. That is up to <span class="hl">${d.total}</span> in home healthcare benefits. And that money comes in a check to you. In your name — not to the doctor, not to [CARRIER]. To you. In your name.`;
+  }
+  // Show/hide aide and homemaker blocks in pitch
+  const hmBlock = document.getElementById('mnhtHomemakerBlock');
+  const aideEnhanced = document.getElementById('mnhtAideEnhanced');
+  const aideSelect = document.getElementById('mnhtAideSelect');
+  if (hmBlock) hmBlock.style.display = isSelect ? 'none' : 'block';
+  if (aideEnhanced) aideEnhanced.style.display = isSelect ? 'none' : 'block';
+  if (aideSelect) aideSelect.style.display = isSelect ? 'block' : 'none';
+  // Update the homemaker bubble for Enhanced
+  const hmBubble = document.getElementById('mnhtHomemakerBubble');
+  if (hmBubble) {
+    if (!isSelect) {
+      hmBubble.style.display = 'block';
+      hmBubble.querySelector('.agent-bubble').innerHTML = `And this is one of my favorite parts — remember when you told me [CAREGIVER] would be the one taking care of you? With this program, [CAREGIVER] can get paid <span class="hl">${d.homemakerDaily}</span> per day for up to <span class="hl">${d.homemakerTotal}</span> if they are going to help you at home. That check is built in to help your family/friend instead of burdening them.`;
+    } else {
+      hmBubble.style.display = 'none';
+    }
+  }
+  // Update the RX bubble
+  const generic = parseInt(document.getElementById('mnhtGeneric').value) || 0;
+  const brand = parseInt(document.getElementById('mnhtBrand').value) || 0;
+  const freq = document.querySelector('input[name="mnhtFreq"]:checked');
+  const freqVal = freq ? freq.value : 'Monthly';
+  const totalRx = generic + brand;
+  const perFillAmt = generic * 10 + brand * 25;
+  const cap = { Classic: 300, Premier: 600, Deluxe: 900 }[key];
+  const multiplier = isSelect ? (freqVal === 'Monthly' ? 12 : 4) : 12;
+  const annualRx = perFillAmt * multiplier;
+  const rxPayout = Math.min(cap, annualRx);
+  const freqLabel = freqVal === 'Monthly' ? 'month' : 'quarter';
+  const rxBubble = document.getElementById('mnhtRxBubble');
+  if (rxBubble && totalRx > 0) {
+    rxBubble.innerHTML = `Additionally, you will get money back every time you fill your prescriptions — that's $10 back per generic and $25 back per brand name. So those <span class="hl">${totalRx}</span> prescriptions you take, you will get a check for <span class="hl">${fmtCalc(perFillAmt)}</span> each <span class="hl">${freqLabel}</span> you get them refilled, up to <span class="hl">${fmtCalc(rxPayout)}</span> per year.`;
+  }
+  mnhtGenerateScript();
+  initAgentChecks();
+}
+
+function mnhtGenerateScript() {
+  const el = document.getElementById('mnhtScriptOutput');
+  if (!mnhtSelectedPlan) { el.innerHTML = '<div class="calc-script-placeholder">👆 Select a plan above to generate the script.</div>'; return; }
+  const generic = parseInt(document.getElementById('mnhtGeneric').value) || 0;
+  const brand = parseInt(document.getElementById('mnhtBrand').value) || 0;
+  const freq = document.querySelector('input[name="mnhtFreq"]:checked').value;
+  const isSelect = getMnhtProductType() === 'select';
+  // Enhanced: always 12 months equivalent; Select: per refill (12 monthly, 4 quarterly)
+  const multiplier = isSelect ? (freq === 'Monthly' ? 12 : 4) : 12;
+  const totalRx = generic + brand;
+  const freqLabel = freq === 'Monthly' ? 'monthly' : 'quarterly';
+  const p = mnhtPremiums[mnhtSelectedPlan];
+  const cap = { Classic: 300, Premier: 600, Deluxe: 900 }[mnhtSelectedPlan];
+  const annual = p * 12;
+  const annualRx = (generic * 10 + brand * 25) * multiplier;
+  const rxPayout = Math.min(cap, annualRx);
+  const netAnnual = annual - rxPayout;
+  const netMonthly = netAnnual / 12;
+  const netDaily = netMonthly / 30;
+  const f = (v) => (v < 0 ? '-' : '') + fmtCalc(v);
+  el.innerHTML = `
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Ok and now I want you to write down <span class="hl">${fmtCalc(p)}</span>. That is the monthly premium for this plan, but stay with me because remember you get that Prescription Rebate.</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Now since you fill <span class="hl">${totalRx}</span> prescriptions <span class="hl">${freqLabel}</span> you are going to receive the <span class="hl">${fmtCalc(rxPayout)}</span> Prescription Rebate amount per year.</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">After you receive that prescription rebate the effective cost of this plan is just <span class="hl">${f(netMonthly)} per month</span> or <span class="hl">${f(netDaily)} per day</span>.</div></div>
+    <div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">For <span class="hl">${f(netDaily)} per day</span>, do you see value in never having to worry about your hospital bills, never having to worry about the cost of an ambulance, and knowing you can recover in the safety of your own home?</div></div>`;
+  initAgentChecks();
+  const mathObj = document.getElementById('mnhtMathObjection');
+  if (mathObj) mathObj.innerHTML = `<div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Let me explain how it works — so if we multiply your monthly premium by 12 we get an annual cost of <span class="hl">${fmtCalc(annual)}</span>. Now after we subtract out your Prescription Rebate of <span class="hl">${fmtCalc(rxPayout)}</span> we get an annual cost of <span class="hl">${f(netAnnual)}</span> per year, which comes out to just <span class="hl">${f(netMonthly)} per month</span> or <span class="hl">${f(netDaily)} per day</span>.</div></div>`;
+}
+
+function mnhtCalcRx() {
+  const generic = parseInt(document.getElementById('mnhtGeneric').value) || 0;
+  const brand = parseInt(document.getElementById('mnhtBrand').value) || 0;
+  const freq = document.querySelector('input[name="mnhtFreq"]:checked').value;
+  const isSelect = getMnhtProductType() === 'select';
+  const multiplier = isSelect ? (freq === 'Monthly' ? 12 : 4) : 12;
+  const annualRx = (generic * 10 + brand * 25) * multiplier;
+  const plans = isSelect ? [
+    { key: 'Classic', label: 'Classic', total: '$54,750', daily: '$150/day × 365 days', sub: 'Aide: $40/day · RX Rebate: $300/yr', cap: 300, prem: mnhtPremiums.Classic },
+    { key: 'Premier', label: 'Premier', total: '$109,500', daily: '$300/day × 365 days', sub: 'Aide: $80/day · RX Rebate: $600/yr', cap: 600, prem: mnhtPremiums.Premier },
+    { key: 'Deluxe', label: 'Deluxe', total: '$164,250', daily: '$450/day × 365 days', sub: 'Aide: $120/day · RX Rebate: $900/yr', cap: 900, prem: mnhtPremiums.Deluxe },
+  ] : [
+    { key: 'Classic', label: 'Classic', total: '$54,750', daily: '$150/day × 365 days', sub: 'Aide: $50/day · RX Rebate: $300/yr', cap: 300, prem: mnhtPremiums.Classic },
+    { key: 'Premier', label: 'Premier', total: '$109,500', daily: '$300/day × 365 days', sub: 'Aide: $100/day · RX Rebate: $600/yr', cap: 600, prem: mnhtPremiums.Premier },
+    { key: 'Deluxe', label: 'Deluxe', total: '$164,250', daily: '$450/day × 365 days', sub: 'Aide: $150/day · RX Rebate: $900/yr', cap: 900, prem: mnhtPremiums.Deluxe },
+  ];
+  let html = '';
+  const labelEl = document.getElementById('mnhtProductLabel');
+  if (labelEl) labelEl.innerHTML = '<span class="state-badge green" style="font-size:12px;padding:6px 14px">' + (isSelect ? '📦 SELECT (ages 45–89 · Aide 60 days · No Homemaker)' : '📦 ENHANCED (ages 18–89 · Aide 365 days · Homemaker benefit)') + '</span>';
+  plans.forEach(p => {
+    const annual = p.prem * 12;
+    const rxPayout = Math.min(p.cap, annualRx);
+    const netAnnual = annual - rxPayout;
+    const netMonthly = netAnnual / 12;
+    const netDaily = netMonthly / 30;
+    const isSelected = mnhtSelectedPlan === p.key;
+    const f = (v) => (v < 0 ? '-' : '') + fmtCalc(v);
+    html += `
+      <div class="calc-plan ${isSelected ? 'selected' : ''}" data-plan="${p.key}">
+        <div class="calc-plan-head"><div class="calc-plan-title">${p.label}</div><div class="calc-plan-total">Total: ${p.total}</div><div class="calc-plan-daily">${p.daily}</div><div class="calc-plan-rx-cap">${p.sub}</div></div>
+        <div class="calc-plan-input-wrap"><div class="calc-plan-input-label">▼ Enter Monthly Premium</div><input class="calc-plan-input" type="text" inputmode="decimal" value="${p.prem}" oninput="onMnhtPremChange('${p.key}', this)" onblur="onMnhtPremCommit('${p.key}', this)" onkeydown="onMnhtPremKey(event, '${p.key}', this)" placeholder="0.00"></div>
+        <div class="calc-math-toggle" onclick="this.nextElementSibling.classList.toggle('open');this.querySelector('.toggle-arrow').textContent=this.nextElementSibling.classList.contains('open')?'▲':'▼'"><span class="toggle-arrow">▼</span> Show Math Breakdown</div>
+        <div class="calc-math-details"><div class="calc-math">
+          <div class="calc-math-row"><span class="calc-math-label">Annual Premium <span>(${fmtCalc(p.prem)} × 12)</span></span><span class="calc-math-value">${fmtCalc(annual)}</span></div>
+          <div class="calc-math-row"><span class="calc-math-label">Minus RX Reimbursement</span><span class="calc-math-value subtract">- ${fmtCalc(rxPayout)}</span></div>
+          ${rxPayout < annualRx ? `<div class="calc-math-row"><span class="calc-math-label"></span><span class="calc-math-value capped">Capped at ${fmtCalc(p.cap)}</span></div>` : ''}
+          <hr class="calc-math-divider">
+          <div class="calc-math-row"><span class="calc-math-label" style="font-weight:700;color:var(--text);">= Effective Annual Cost</span><span class="calc-math-value">${f(netAnnual)}</span></div>
+        </div></div>
+        <div class="calc-effective-header">Effective Cost After RX Rebate</div>
+        <div class="calc-plan-footer">
+          <div class="calc-footer-stat"><div class="calc-footer-label">Effective Monthly</div><div class="calc-footer-hint">(${f(netAnnual)} ÷ 12)</div><div class="calc-footer-value">${f(netMonthly)}<small>/mo</small></div></div>
+          <div class="calc-footer-divider"></div>
+          <div class="calc-footer-stat"><div class="calc-footer-label">Effective Daily</div><div class="calc-footer-hint">(${f(netMonthly)} ÷ 30)</div><div class="calc-footer-value">${f(netDaily)}<small>/day</small></div></div>
+        </div>
+        <label class="calc-select-wrap" onclick="mnhtSelectPlan('${p.key}')"><input type="radio" class="calc-select-radio" name="mnhtPlanSelect" value="${p.key}" ${isSelected ? 'checked' : ''}><span class="calc-select-label">${isSelected ? '✓ Selected' : 'Select Plan'}</span></label>
+      </div>`;
+  });
+  document.getElementById('mnhtCalcResults').innerHTML = html;
+  if (mnhtSelectedPlan) mnhtGenerateScript();
+}
+
+mnhtCalcRx();
+
+function ahlCalcDraft() {
+  const dobVal = document.getElementById('ahlSsDob').value;
+  const enrollVal = document.getElementById('ahlSsEnroll').value;
+  const ssi = document.getElementById('step2SsiYes') && document.getElementById('step2SsiYes').checked;
+  const result = document.getElementById('ahlSsDraftResult');
+  const label = document.getElementById('ahlSsPayLabel');
+  if (!dobVal || !enrollVal) { result.innerHTML = ''; return; }
+  const dp = dobVal.split('-'); const ep = enrollVal.split('-');
+  const dob = new Date(parseInt(dp[0]), parseInt(dp[1])-1, parseInt(dp[2]));
+  const enroll = new Date(parseInt(ep[0]), parseInt(ep[1])-1, parseInt(ep[2]));
+  const birthDay = dob.getDate();
+
+  if (ssi) {
+    let pm = enroll.getMonth(), py = enroll.getFullYear();
+    const t3 = new Date(py, pm, 3);
+    if ((t3 - enroll)/(1000*60*60) < 72) { pm++; if(pm>11){pm=0;py++;} }
+    const d = new Date(py, pm, 3);
+    const ds = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    if (label) label.textContent = ds;
+    result.innerHTML = `<div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px"><div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">✅ Next SS Deposit Date (SSI)</div><div style="font-size:18px;font-weight:800;color:var(--green)">${ds}</div><div style="font-size:11px;color:var(--text-dim)">SSI client → Draft on the 3rd</div></div>`;
+    return;
+  }
+  let wn, sl;
+  if (birthDay>=1&&birthDay<=10){wn=2;sl='2nd';}
+  else if(birthDay>=11&&birthDay<=20){wn=3;sl='3rd';}
+  else{wn=4;sl='4th';}
+  const ssThis = getNthWeekday(enroll.getFullYear(), enroll.getMonth(), 3, wn);
+  let dm=enroll.getMonth(),dy=enroll.getFullYear(),pushed=false;
+  if((ssThis-enroll)/(1000*60*60)<72){dm++;if(dm>11){dm=0;dy++;}pushed=true;}
+  const rec = getNthWeekday(dy,dm,3,wn);
+  const ds = rec.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  if (label) label.textContent = ds + ' (' + sl + ' Wednesday)';
+  result.innerHTML = `<div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px"><div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">✅ Next SS Deposit Date</div><div style="font-size:18px;font-weight:800;color:var(--green)">${ds}</div><div style="font-size:11px;color:var(--text-dim)">Born ${birthDay}${birthDay<=10?'st–10th':birthDay<=20?'th–20th':'st–31st'} → ${sl} Wednesday</div>${pushed?'<div style="margin-top:4px;font-size:11px;color:#C07D10">⚠️ Within 72hrs — pushed to next month</div>':''}</div>`;
+}
+
+// AHL Step 2 SS calculator
+(function() {
+  const today = new Date();
+  const el = document.getElementById('ahlStep2SsEnroll');
+  if (el) el.value = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+})();
+
+function ahlStep2CalcDraft() {
+  const dobVal = document.getElementById('ahlStep2SsDob').value;
+  const enrollVal = document.getElementById('ahlStep2SsEnroll').value;
+  const ssi = document.getElementById('step2SsiYes') && document.getElementById('step2SsiYes').checked;
+  const result = document.getElementById('ahlStep2SsDraftResult');
+  if (!dobVal || !enrollVal) { result.innerHTML = ''; return; }
+  const dp = dobVal.split('-'); const ep = enrollVal.split('-');
+  const dob = new Date(parseInt(dp[0]), parseInt(dp[1])-1, parseInt(dp[2]));
+  const enroll = new Date(parseInt(ep[0]), parseInt(ep[1])-1, parseInt(ep[2]));
+  const birthDay = dob.getDate();
+  if (ssi) {
+    let pm = enroll.getMonth(), py = enroll.getFullYear();
+    const t3 = new Date(py, pm, 3);
+    if ((t3 - enroll)/(1000*60*60) < 72) { pm++; if(pm>11){pm=0;py++;} }
+    const d = new Date(py, pm, 3);
+    const ds = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+    result.innerHTML = `<div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px"><div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">✅ Recommended Draft Date (SSI)</div><div style="font-size:18px;font-weight:800;color:var(--green)">${ds}</div><div style="font-size:11px;color:var(--text-dim)">SSI client → Draft on the 3rd</div></div>`;
+    return;
+  }
+  let wn, sl;
+  if (birthDay>=1&&birthDay<=10){wn=2;sl='2nd';}
+  else if(birthDay>=11&&birthDay<=20){wn=3;sl='3rd';}
+  else{wn=4;sl='4th';}
+  const ssThis = getNthWeekday(enroll.getFullYear(), enroll.getMonth(), 3, wn);
+  let dm=enroll.getMonth(),dy=enroll.getFullYear(),pushed=false;
+  if((ssThis-enroll)/(1000*60*60)<72){dm++;if(dm>11){dm=0;dy++;}pushed=true;}
+  const rec = getNthWeekday(dy,dm,3,wn);
+  const ds = rec.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  result.innerHTML = `<div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:8px;padding:12px"><div style="font-size:10px;font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px">✅ Recommended Draft Date</div><div style="font-size:18px;font-weight:800;color:var(--green)">${ds}</div><div style="font-size:11px;color:var(--text-dim)">Born ${birthDay}${birthDay<=10?'st–10th':birthDay<=20?'th–20th':'st–31st'} → ${sl} Wednesday</div>${pushed?'<div style="margin-top:4px;font-size:11px;color:#C07D10">⚠️ Within 72hrs — pushed to next month</div>':''}</div>`;
+}
+
+function ancSsiChange() {
+  const isYes = document.getElementById('ssiYes').checked;
+  const resp = document.getElementById('ssiResponse');
+  if (resp) {
+    resp.innerHTML = isYes
+      ? '<div class="note-card"><span class="card-icon">📋</span> <strong>SSI Client</strong> — Benefits received on the 1st of the month.</div>'
+      : '<div class="note-card"><span class="card-icon">📋</span> Align with when client has funds (tomorrow or Social Security pay date).</div>';
+  }
+  calcDraftDate();
+}
+
+function ancSetTodayDates() {
+  const t = new Date();
+  const iso = `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+  ['ssEnrollDate','ahlSsEnroll','ahlStep2SsEnroll'].forEach(id => { const el = document.getElementById(id); if (el) el.value = iso; });
+}
+ancSetTodayDates();
+
+function closeInterestChange() {
+  const y = document.getElementById('closeIntYes');
+  const n = document.getElementById('closeIntNo');
+  const r = document.getElementById('closeInterestResult');
+  if (!r) return;
+  if (y && y.checked) {
+    r.innerHTML = '<div class="tip-card"><span class="card-icon">💡</span> If Yes: proceed to the <a class="link-inline" onclick="goToStep(\'ancillary\')">Ancillary Product Script</a>.</div>';
+  } else if (n && n.checked) {
+    r.innerHTML = '<div class="agent-line"><span class="agent-label">Agent</span><div class="agent-bubble">Okay no worries, I will follow-up with you next week to see if you have any questions. Have a wonderful day!</div></div>';
+  } else { r.innerHTML = ''; }
+}
+
+function resetAncillary() {
+  ancState = ''; ancAge = null; ancPreciseAge = null; ancHHCOnly = false; ancIneligible = false; ancInGI = false;
+  ['ancMedicaidResult','ancMedsResult','healthFlagResult','ancStateInfo','ancAgeInfo','ancRouteResult','ssDraftResult','ahlSsDraftResult','ahlStep2SsDraftResult'].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = ''; });
+  const ic = document.getElementById('insulinCheck'); if (ic) ic.style.display = 'none';
+  const sr = document.getElementById('ssiResponse'); if (sr) sr.innerHTML = '<div class="note-card"><span class="card-icon">📋</span> Align with when client has funds (tomorrow or Social Security pay date).</div>';
+  ['fundsYes','mnhtFreqMonthly','ahlStep2FundsYes','ssiNo'].forEach(id => { const e = document.getElementById(id); if (e) e.checked = true; });
+  ['ssDraftCalcWrap','ahlStep2SsWrap'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
+  const lbl = document.getElementById('ahlSsPayLabel'); if (lbl) lbl.textContent = '[enter DOB into calculator below]';
+  mnhtPremiums = { Classic: 0, Premier: 0, Deluxe: 0 };
+  mnhtSelectedPlan = null;
+  ['mnhtGeneric','mnhtBrand'].forEach(id => { const e = document.getElementById(id); if (e) e.value = '0'; });
+  mnhtCalcRx();
+  ancSetTodayDates();
+  ancUpdateRouting();
+}
+
 // ═══ AGENT "READ" CHECK BUTTONS ═══
 function initAgentChecks() {
   document.querySelectorAll('.step-section[id^="step-"]').forEach(sec => {
-    if (!/^step-\d+$/.test(sec.id)) return;
+    if (!/^step-(\d+|anc[\w-]*)$/.test(sec.id)) return;
     sec.querySelectorAll('.agent-line').forEach(line => {
       if (line.closest('.objection-body') || line.querySelector(':scope > .agent-check')) return;
       const btn = document.createElement('button');
